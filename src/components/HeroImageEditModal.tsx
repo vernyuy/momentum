@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Camera, Save, Image as ImageIcon } from 'lucide-react';
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+import { getUrl, uploadData } from 'aws-amplify/storage';
+
+const client = generateClient<Schema>();
 
 interface HeroImageEditModalProps {
   isOpen: boolean;
@@ -25,6 +30,21 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
     setImageUrl(currentImage);
     setImagePreview(currentImage);
   }, [currentImage, isOpen]);
+
+
+      useEffect(() => {
+        client.models.Hero.observeQuery().subscribe({
+          next: (data: any) =>{ 
+            console.log('carousel data:', data.items);
+            // setLocalImages(data.items);
+        }});
+      }, []);
+
+    async function createHeroImage(data?: any) {
+        console.log('createHeroImage response:');
+        const res = await client.models.Hero.create(data);
+        console.log('createHeroImage response:', res);
+      }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -49,9 +49,9 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
       }});
     }else{
 
-      client.models.CarouselImage.observeQuery().subscribe({
+      client.models.ResortImages.observeQuery().subscribe({
         next: (data: any) =>{ 
-          console.log('carousel data:', data.items);
+          console.log('resort data:', data.items);
           setLocalImages(data.items);
       }});
     }
