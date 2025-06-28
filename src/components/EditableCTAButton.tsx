@@ -39,12 +39,12 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
       large: 'py-4 px-8 text-lg sm:text-xl md:text-2xl'
     };
 
-    return `${baseClasses} ${styleClasses[button.style]} ${sizeClasses[button.size]} ${className}`;
+    return `${baseClasses} ${styleClasses[button?.style!]} ${sizeClasses[button?.size!]} ${className}`;
   };
 
   const handleButtonClick = () => {
     if (button.url) {
-      window.open(button.url, '_blank');
+      window.open(button?.url!, '_blank');
     } else if (onClick) {
       onClick();
     }
