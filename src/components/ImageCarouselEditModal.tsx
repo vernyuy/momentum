@@ -149,7 +149,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const handleImageUpload = async (file: File) => {
     let imageUrl = '';
     if (file) {
-        const fileName = `${Date.now()}-${file.name}`;
+        const fileName = `pictures/${Date.now()}-${file.name}`;
         const uploadResult = await uploadData({
           key: fileName,
           data: file,
