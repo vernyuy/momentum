@@ -42,7 +42,7 @@ const AboutSection: React.FC = () => {
       client.models.RegisterButton.observeQuery().subscribe({
         next: (data: any) =>{ 
           console.log('Timezone data:', data.items);
-          setCTAButton(data.items[1]);
+          setCTAButton(data.items[0]);
       }});
 
       client.models.Momentum.observeQuery().subscribe({
@@ -53,6 +53,9 @@ const AboutSection: React.FC = () => {
           setSubHeading(data.items[0].subHeading || initialSubHeading);
           setDescription(data.items[0].description || initialDescription);
       }});
+
+      // unsubscribe from the query when the component unmounts
+      
     }, []);
   // function createMomentum(data?: any) {
   //     client.models.Momentum.create({
