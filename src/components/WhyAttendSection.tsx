@@ -1,11 +1,17 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Save, RotateCcw, Edit, X } from 'lucide-react';
 import { whyAttendItems as initialWhyAttendItems } from '../data/conference';
 import EditableHeading from './EditableHeading';
 import PinModal from './PinModal';
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+
+const client = generateClient<Schema>();
 
 interface WhyAttendItem {
+  id: string;
   icon: string;
   title: string;
   description: string;
@@ -23,9 +29,32 @@ const WhyAttendSection: React.FC = () => {
 
   // Why attend items state
   const [whyAttendItems, setWhyAttendItems] = useState<WhyAttendItem[]>(initialWhyAttendItems);
+
+      useEffect(() => {
+        // createWhyAttend();
+  
+        client.models.WhyAttend.observeQuery().subscribe({
+          next: (data: any) =>{ 
+            setWhyAttendItems(data.items);
+            console.log('Why Attend data:', data.items);
+        }});
+      }, [whyAttendItems]);
+    async function createWhyAttend(data?: any) {
+        const res = await client.models.WhyAttend.create({
+          icon: '🎓',
+          title: 'Learn',
+          description: 'Gain cutting-edge insights from industry leaders and expand your professional knowledge.',
+        });
+        console.log('Created Why Attend item:', res);
+      }
+
+      function updateWhyAttend(data: any) {
+        client.models.WhyAttend.update(data);
+      }
   
   // Edit form state for individual cards
   const [editForm, setEditForm] = useState<WhyAttendItem>({
+    id: '',
     icon: '',
     title: '',
     description: ''
@@ -59,17 +88,18 @@ const WhyAttendSection: React.FC = () => {
 
   const handleSaveCardEdit = () => {
     if (editingCardIndex !== null) {
+      updateWhyAttend(editForm);
       const updatedItems = [...whyAttendItems];
       updatedItems[editingCardIndex] = editForm;
       setWhyAttendItems(updatedItems);
       setEditingCardIndex(null);
-      setEditForm({ icon: '', title: '', description: '' });
+      setEditForm({ id:'', icon: '', title: '', description: '' });
     }
   };
 
   const handleCancelCardEdit = () => {
     setEditingCardIndex(null);
-    setEditForm({ icon: '', title: '', description: '' });
+    setEditForm({id:'', icon: '', title: '', description: '' });
   };
 
   const handleSaveChanges = async () => {

@@ -1,3 +1,6 @@
+/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Save, RotateCcw, Edit, X } from 'lucide-react';
@@ -5,6 +8,10 @@ import ImageCarousel, { CarouselImage } from './ImageCarousel';
 import ImageCarouselEditModal from './ImageCarouselEditModal';
 import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import PinModal from './PinModal';
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+
+const client = generateClient<Schema>();
 
 const AboutSection: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -21,7 +28,47 @@ const AboutSection: React.FC = () => {
   const [mainHeading, setMainHeading] = useState(initialMainHeading);
   const [subHeading, setSubHeading] = useState(initialSubHeading);
   const [description, setDescription] = useState(initialDescription);
+  const [id, setId] = useState('about-section');  
 
+    const [ctaButton, setCTAButton] = useState({
+      id: 'about-cta',
+      text: 'Register Now',
+      url: '',
+      style: 'secondary',
+      size: 'large'
+    });
+    useEffect(() => {
+      // createMomentum();
+      client.models.RegisterButton.observeQuery().subscribe({
+        next: (data: any) =>{ 
+          console.log('Timezone data:', data.items);
+          setCTAButton(data.items[1]);
+      }});
+
+      client.models.Momentum.observeQuery().subscribe({
+        next: (data: any) =>{ 
+          setCTAButton(data.items[1]);
+          setId(data.items[0].id || 'about-section');
+          setMainHeading(data.items[0].mainHeading || initialMainHeading);
+          setSubHeading(data.items[0].subHeading || initialSubHeading);
+          setDescription(data.items[0].description || initialDescription);
+      }});
+    }, []);
+  // function createMomentum(data?: any) {
+  //     client.models.Momentum.create({
+  //       mainHeading: initialMainHeading,
+  //       subHeading: initialSubHeading,
+  //       description: initialDescription
+  //     });
+  //   }
+
+    function updateMomentum(data: any) {
+      client.models.Momentum.update(data);
+    }
+
+    function updateButton(data: any) {
+      client.models.RegisterButton.update(data);
+    }
   // Edit form state
   const [contentEditForm, setContentEditForm] = useState({
     mainHeading: initialMainHeading,
@@ -60,6 +107,13 @@ const AboutSection: React.FC = () => {
 
   // Local state for images
   const [localImages, setLocalImages] = useState<CarouselImage[]>(initialImages);
+  useEffect(() => {
+        client.models.CarouselImage.observeQuery().subscribe({
+          next: (data: any) =>{ 
+            console.log('carousel data:', data.items);
+            setLocalImages(data.items);
+        }});
+      }, []);
   
   // CTA Button state
   const initialCTAButton: CTAButton = {
@@ -69,7 +123,7 @@ const AboutSection: React.FC = () => {
     style: 'primary',
     size: 'medium'
   };
-  const [ctaButton, setCTAButton] = useState(initialCTAButton);
+
   const [isCTAEditable, setIsCTAEditable] = useState(false);
   
   // Track if changes have been made
@@ -137,14 +191,18 @@ const AboutSection: React.FC = () => {
     setLocalImages(images);
   };
 
-  const handleCTASave = (newButton: CTAButton) => {
+  const handleCTASave = (newButton: any) => {
+    updateButton(newButton);
     setCTAButton(newButton);
   };
 
   const handleContentSave = () => {
-    setMainHeading(contentEditForm.mainHeading);
-    setSubHeading(contentEditForm.subHeading);
-    setDescription(contentEditForm.description);
+    updateMomentum({
+      id: id,
+      mainHeading: mainHeading,
+      subHeading: subHeading,
+      description: description
+    });
     setShowEditModal(false);
   };
 
@@ -191,7 +249,7 @@ const AboutSection: React.FC = () => {
     setSubHeading(initialSubHeading);
     setDescription(initialDescription);
     setLocalImages(initialImages);
-    setCTAButton(initialCTAButton);
+    setCTAButton(initialCTAButton as any);
     setHasUnsavedChanges(false);
   };
 
@@ -413,8 +471,8 @@ const AboutSection: React.FC = () => {
                     <input
                       type="text"
                       id="mainHeading"
-                      value={contentEditForm.mainHeading}
-                      onChange={(e) => setContentEditForm({ ...contentEditForm, mainHeading: e.target.value })}
+                      value={mainHeading}
+                      onChange={(e) => setMainHeading(e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heroHighlight focus:border-transparent"
                       placeholder="Enter main heading"
                     />
@@ -427,8 +485,8 @@ const AboutSection: React.FC = () => {
                     <input
                       type="text"
                       id="subHeading"
-                      value={contentEditForm.subHeading}
-                      onChange={(e) => setContentEditForm({ ...contentEditForm, subHeading: e.target.value })}
+                      value={subHeading}
+                      onChange={(e) => setSubHeading(e.target.value )}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heroHighlight focus:border-transparent"
                       placeholder="Enter sub heading"
                     />
@@ -440,8 +498,8 @@ const AboutSection: React.FC = () => {
                     </label>
                     <textarea
                       id="description"
-                      value={contentEditForm.description}
-                      onChange={(e) => setContentEditForm({ ...contentEditForm, description: e.target.value })}
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heroHighlight focus:border-transparent resize-none"
                       placeholder="Enter description"
                       rows={6}

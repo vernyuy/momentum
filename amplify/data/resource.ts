@@ -3,7 +3,27 @@ const schema = a.schema({
   Timezone: a.model({
     name: a.string()
   }).authorization((allow) => [allow.publicApiKey()]),
-
+  RegisterButton: a.model({
+    text: a.string(),
+    url: a.string(),
+    style: a.string(),
+    size: a.string(),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  Momentum: a.model({
+    mainHeading: a.string(),
+    subHeading: a.string(),
+    description: a.string(),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  CarouselImage: a.model({
+    alt: a.string(),
+    caption: a.string(),
+    url: a.string(),
+  }).authorization((allow) => [allow.publicApiKey()]),
+  WhyAttend: a.model({
+    title: a.string(),
+    description: a.string(),
+    icon: a.string(),
+  }).authorization((allow) => [allow.publicApiKey()]),
   Speaker: a.model({
     name: a.string(),
     title: a.string(),
@@ -42,10 +62,10 @@ const schema = a.schema({
       description: a.string(),
       phone: a.string(),
     }).authorization((allow) => [allow.publicApiKey()]),
-  User: a.model({
-      username: a.string(),
-      email: a.string(),
-      image: a.string(),
+  ResortImages: a.model({
+      url: a.string(),
+      alt: a.string(),
+      caption: a.string(),
     }).authorization((allow) => [allow.publicApiKey()]),
 });
 

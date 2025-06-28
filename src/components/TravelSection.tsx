@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plane, Car, ChevronDown, Settings, Save, RotateCcw, Edit, X } from 'lucide-react';
@@ -25,7 +26,7 @@ interface TravelOption {
 const TravelSection: React.FC = () => {
     const [airTravel, setairTravel] = useState<Array<Schema["AirTravel"]["type"]>>([]);
     const [groundTransport, setgroundTransport] = useState<Array<Schema["GroundTransport"]["type"]>>([]);
-const [travelOptions, setTravelOptions] = useState<TravelOption[]>([])
+const [travelOptions, setTravelOptions] = useState<any[]>([])
   useEffect(() => {
     client.models.AirTravel.observeQuery().subscribe({
       next: (data) =>{ 
@@ -51,7 +52,7 @@ const [travelOptions, setTravelOptions] = useState<TravelOption[]>([])
     });
   }, []);
 
-  function createSpeaker(speaker: Speaker) {
+  function createSpeaker(speaker: any) {
     client.models.Speaker.create(speaker);
   }
   async function deleteSpeaker(speakerId: string) {

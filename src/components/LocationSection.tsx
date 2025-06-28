@@ -1,3 +1,6 @@
+/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Phone, AlertTriangle, Settings, Save, RotateCcw, Edit, X } from 'lucide-react';
@@ -5,8 +8,13 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import ImageCarousel, { CarouselImage } from './ImageCarousel';
 import ImageCarouselEditModal from './ImageCarouselEditModal';
 import PinModal from './PinModal';
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+
+const client = generateClient<Schema>();
 
 interface HotelInfo {
+  id: string;
   name: string;
   address: string;
   phone: string;
@@ -26,17 +34,94 @@ const LocationSection: React.FC = () => {
 
   // Hotel information state
   const initialHotelInfo: HotelInfo = {
+    id: '1',
     name: 'The Westin Kierland Resort & Spa',
     address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
     phone: '(480) 991-4000'
   };
-  const [hotelInfo, setHotelInfo] = useState(initialHotelInfo);
-  const [hotelEditForm, setHotelEditForm] = useState(initialHotelInfo);
+  const initialCTAButton1: CTAButton = {
+    id: 'location-cta-1',
+    text: 'Westin Resort Registration',
+    url: '',
+    style: 'primary',
+    size: 'medium'
+  };
 
-  // Notice text state
+  const initialCTAButton2: CTAButton = {
+    id: 'location-cta-2',
+    text: 'Additional Hotel Choices',
+    url: '',
+    style: 'outline',
+    size: 'medium'
+  };
   const initialNoticeText = 'Hotel room block closes on August 19, 2025. Reserve your room early to secure conference rates!';
   const [noticeText, setNoticeText] = useState(initialNoticeText);
+  const [noticeId, setNoticeId] = useState('');
   const [noticeEditForm, setNoticeEditForm] = useState(initialNoticeText);
+  const [hotelInfo, setHotelInfo] = useState(initialHotelInfo);
+  const [hotelEditForm, setHotelEditForm] = useState(initialHotelInfo);
+  const [ctaButton1, setCTAButton1] = useState(initialCTAButton1);
+  const [ctaButton2, setCTAButton2] = useState(initialCTAButton2);
+  useEffect(() => {
+    // createHotel();
+    // createNotice()
+    client.models.RegisterButton.observeQuery().subscribe({
+      next: (data: any) => {
+        console.log('Timezone data:', data.items);
+        setCTAButton1(data.items[2]);
+        setCTAButton2(data.items[3]);
+      }
+    });
+    client.models.Hotel.observeQuery().subscribe({
+      next: (data: any) => {
+        setHotelInfo(data.items[0]);
+        console.log('Why Attend data:', data.items);
+      }
+    });
+    client.models.Notice.observeQuery().subscribe({
+      next: (data: any) => {
+        setNoticeText(data.items[0].content);
+        setNoticeId(data.items[0].id);
+        console.log('Why Attend data:', data.items);
+      }
+    });
+  }, [hotelInfo]);
+  async function createHotel(data?: any) {
+    const res = await client.models.Hotel.create({
+      name: 'The Westin Kierland Resort & Spa',
+      address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
+      phone: '(480) 991-4000'
+    });
+    console.log('Created Why Attend item:', res);
+  }
+  async function createNotice(data?: any) {
+    const res = await client.models.Notice.create({
+      content: 'Hotel room block closes on August 19, 2025. Reserve your room early to secure conference rates!'
+    });
+    console.log('Created Why Attend item:', res);
+  }
+
+  async function createResort(data?: any) {
+    const res = await client.models.ResortImages.create({
+      url: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
+      alt: 'Westin Kierland Resort exterior',
+      caption: 'Beautiful resort exterior with desert landscape'
+    });
+    console.log('Created resort item:', res);
+  }
+
+  function updateHotel(data: any) {
+    client.models.Hotel.update(data);
+  }
+  function updateNotice(data: any) {
+    client.models.Notice.update(data);
+  }
+
+  function updateButton(data: any) {
+    client.models.RegisterButton.update(data);
+  }
+
+  // Notice text state
 
   // Resort images state
   const initialResortImages: CarouselImage[] = [
@@ -63,88 +148,15 @@ const LocationSection: React.FC = () => {
   ];
   const [resortImages, setResortImages] = useState(initialResortImages);
 
-  // CTA Buttons state
-  const initialCTAButton1: CTAButton = {
-    id: 'location-cta-1',
-    text: 'Westin Resort Registration',
-    url: '',
-    style: 'primary',
-    size: 'medium'
-  };
+  useEffect(() => {
+    client.models.ResortImages.observeQuery().subscribe({
+      next: (data: any) => {
+        setResortImages(data.items);
+        console.log('resort data:', data.items);
+      }
+    });
+  }, [hotelInfo]);
 
-  const initialCTAButton2: CTAButton = {
-    id: 'location-cta-2',
-    text: 'Additional Hotel Choices',
-    url: '',
-    style: 'outline',
-    size: 'medium'
-  };
-
-  // const databaseSchema = {
-  //   timezone: {
-  //     PK: string,
-  //     SK: string,
-  //     timezone: string,
-  //   },
-  //   button:{
-  //     PK: string,
-  //     SK: String,
-  //     text: string,
-  //     url: string,
-  //     primary: Boolean
-  //     secondary: Boolean, 
-  //     outline: Boolean,
-  //     size: string,
-  //   },
-  //   about:{
-  //     PK: string,
-  //     SK: string,
-  //     heading: string,
-  //     subheading: string,
-  //     content: string,
-  //   },
-  //   carousel: {
-  //     PK: string,
-  //     SK: string,
-  //     images: CarouselImage[],
-  //     text: string,
-  //     caption
-  //   },
-  //   why_attend:{
-  //     PK,
-  //     SK,
-  //     title
-  //   },
-  //   why_attends:{
-  //     PK,
-  //     SK,
-  //     icon,
-  //     ttitle,
-  //     description
-  //   },
-  //   location:{
-  //     PK, 
-  //     SK,
-  //     name,
-  //     address,
-  //     phone_number
-  //   },
-  //   resort: {
-
-  //   },
-  //   notice: {
-  //     PK, SK, text
-  //   },
-  //   travel_option:{
-  //     PK, sk, title, airport_name, description, info, travel_tip
-  //   },
-  //   agenda:{
-  //     pk, sk, cconference_title, name, speaker, time, time_zone, event_type, emoji
-  //   }
-  // }
-
-  const [ctaButton1, setCTAButton1] = useState(initialCTAButton1);
-  const [ctaButton2, setCTAButton2] = useState(initialCTAButton2);
   const [isCTA1Editable, setIsCTA1Editable] = useState(false);
   const [isCTA2Editable, setIsCTA2Editable] = useState(false);
 
@@ -160,7 +172,7 @@ const LocationSection: React.FC = () => {
     const imagesChanged = JSON.stringify(resortImages) !== JSON.stringify(initialResortImages);
     const cta1Changed = JSON.stringify(ctaButton1) !== JSON.stringify(initialCTAButton1);
     const cta2Changed = JSON.stringify(ctaButton2) !== JSON.stringify(initialCTAButton2);
-    
+
     setHasUnsavedChanges(headingChanged || hotelChanged || noticeChanged || imagesChanged || cta1Changed || cta2Changed);
   }, [sectionHeading, hotelInfo, noticeText, resortImages, ctaButton1, ctaButton2]);
 
@@ -227,10 +239,12 @@ const LocationSection: React.FC = () => {
   };
 
   const handleCTA1Save = (newButton: CTAButton) => {
+    updateButton(newButton);
     setCTAButton1(newButton);
   };
 
   const handleCTA2Save = (newButton: CTAButton) => {
+    updateButton(newButton);
     setCTAButton2(newButton);
   };
 
@@ -239,21 +253,23 @@ const LocationSection: React.FC = () => {
   };
 
   const handleHotelSave = () => {
+    updateHotel(hotelEditForm);
     setHotelInfo(hotelEditForm);
     setShowHotelEditModal(false);
   };
 
   const handleNoticeSave = () => {
+    updateNotice({ id: noticeId, content: noticeEditForm });
     setNoticeText(noticeEditForm);
     setShowNoticeEditModal(false);
   };
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    
+
     // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     // In a real app, you would save to your backend here
     console.log('Saving location section changes:', {
       sectionHeading,
@@ -263,16 +279,16 @@ const LocationSection: React.FC = () => {
       ctaButton1,
       ctaButton2
     });
-    
+
     setIsSaving(false);
     setHasUnsavedChanges(false);
-    
+
     // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Location section saved successfully!';
     document.body.appendChild(successMessage);
-    
+
     setTimeout(() => {
       document.body.removeChild(successMessage);
     }, 3000);
@@ -305,11 +321,10 @@ const LocationSection: React.FC = () => {
               </h2>
               <motion.button
                 onClick={handleEditClick}
-                className={`p-3 rounded-full transition-all duration-300 ${
-                  isEditMode 
-                    ? 'bg-success text-white shadow-lg' 
+                className={`p-3 rounded-full transition-all duration-300 ${isEditMode
+                    ? 'bg-success text-white shadow-lg'
                     : 'bg-white/80 text-gray-600 hover:bg-white hover:text-heroHighlight'
-                }`}
+                  }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 title={isEditMode ? 'Exit Edit Mode' : 'Edit Section'}
@@ -337,7 +352,7 @@ const LocationSection: React.FC = () => {
                       You have unsaved changes
                     </p>
                   </div>
-                  
+
                   <div className="flex gap-3">
                     <motion.button
                       onClick={handleResetChanges}
@@ -348,7 +363,7 @@ const LocationSection: React.FC = () => {
                       <RotateCcw size={16} />
                       Reset
                     </motion.button>
-                    
+
                     <motion.button
                       onClick={handleSaveChanges}
                       disabled={isSaving}
@@ -481,7 +496,7 @@ const LocationSection: React.FC = () => {
             >
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg h-full">
                 <div className="aspect-[4/3] relative">
-                  <ImageCarousel 
+                  <ImageCarousel
                     images={resortImages}
                     autoPlay={true}
                     autoPlayInterval={4000}
@@ -707,6 +722,7 @@ const LocationSection: React.FC = () => {
         onClose={() => setShowImageEditModal(false)}
         onSave={handleImagesSave}
         images={resortImages}
+        type="resort"
       />
     </>
   );

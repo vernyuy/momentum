@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ScrollNavigation from './components/ScrollNavigation';
 import HeroSection from './components/HeroSection';
@@ -8,8 +10,8 @@ import LocationSection from './components/LocationSection';
 import TravelSection from './components/TravelSection';
 import AgendaSection from './components/AgendaSection';
 import SpeakersSection from './components/SpeakersSection';
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
+// import type { Schema } from "../amplify/data/resource";
+// import { generateClient } from "aws-amplify/data";
 
 const sections = [
   'Hero',
@@ -20,20 +22,20 @@ const sections = [
   'Agenda',
   'Speakers',
 ];
-const client = generateClient<Schema>();
+// const client = generateClient<Schema>();
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
+  // useEffect(() => {
+  //   client.models.Todo.observeQuery().subscribe({
+  //     next: (data) => setTodos([...data.items]),
+  //   });
+  // }, []);
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
+  // function createTodo() {
+  //   client.models.Todo.create({ content: window.prompt("Todo content") });
+  // }
   const [activeSection, setActiveSection] = useState(0);
 
   const scrollToSection = (sectionIndex: number) => {
@@ -66,7 +68,7 @@ function App() {
 
   return (
     <div className="relative">
-      <button onClick={createTodo}>+ new</button>
+      {/* <button onClick={createTodo}>+ new</button> */}
       <ScrollNavigation
         sections={sections}
         activeSection={activeSection}

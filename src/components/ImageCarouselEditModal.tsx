@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Edit, Trash2, GripVertical, Upload, Camera, Save } from 'lucide-react';
 
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+
+const client = generateClient<Schema>();
 export interface CarouselImage {
+  id: any;
   url: string;
   alt: string;
   caption?: string;
@@ -12,27 +18,66 @@ interface ImageCarouselEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (images: CarouselImage[]) => void;
-  images: CarouselImage[];
+  images: any[];
+  type?: string;
 }
 
 const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({ 
   isOpen, 
   onClose, 
   onSave, 
-  images 
+  images,
+  type = 'resort'
 }) => {
   const [localImages, setLocalImages] = useState<CarouselImage[]>(images);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({ url: '', alt: '', caption: '' });
+  const [editForm, setEditForm] = useState({id:'', url: '', alt: '', caption: '' });
   const [isDragging, setIsDragging] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setLocalImages(images);
-  }, [images, isOpen]);
+  // useEffect(() => {
+  //   setLocalImages(images);
+  // }, [images, isOpen]);
+    useEffect(() => {
+      if (type !== 'resort') {
+      client.models.CarouselImage.observeQuery().subscribe({
+        next: (data: any) =>{ 
+          console.log('carousel data:', data.items);
+          setLocalImages(data.items);
+      }});
+    }else{
 
+      client.models.CarouselImage.observeQuery().subscribe({
+        next: (data: any) =>{ 
+          console.log('carousel data:', data.items);
+          setLocalImages(data.items);
+      }});
+    }
+    }, [images, isOpen]);
+  async function createCarouselImage(data?: any) {
+      const res = await client.models.CarouselImage.create(data);
+      console.log('createCarouselImage response:', res);
+    }
+
+    async function createResortImage(data?: any) {
+      const res = await client.models.ResortImages.create(data);
+      console.log('createCarouselImage response:', res);
+    }
+
+    function updateCarouselImage(data: any) {
+      client.models.CarouselImage.update(data);
+    }
+    function updateResortImage(data: any) {
+      client.models.ResortImages.update(data);
+    }
+    function deleteCarouselImage(id: any) {
+      client.models.CarouselImage.delete(id);
+    }
+    function deleteResortImage(id: any) {
+      client.models.ResortImages.delete(id);
+    }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(localImages);
@@ -42,41 +87,59 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const handleClose = () => {
     setLocalImages(images);
     setEditingIndex(null);
-    setEditForm({ url: '', alt: '', caption: '' });
+    setEditForm({id:'', url: '', alt: '', caption: '' });
     onClose();
   };
 
   const handleAddImage = () => {
     setEditingIndex(-1);
-    setEditForm({ url: '', alt: '', caption: '' });
+    setEditForm({id:'', url: '', alt: '', caption: '' });
   };
 
   const handleEditImage = (index: number) => {
     setEditingIndex(index);
     const image = localImages[index];
-    setEditForm({ url: image.url, alt: image.alt, caption: image.caption || '' });
+    setEditForm({id: image.id, url: image.url, alt: image.alt, caption: image.caption || '' });
   };
 
   const handleSaveEdit = () => {
+    console.log('handleSaveEdit', editForm);
     if (editingIndex === -1) {
       // Adding new image
+      console.log('editForm', editForm);
+      if( type === 'resort') {
+        createResortImage(editForm);
+      } else {
+      createCarouselImage(editForm);
+      }
       setLocalImages([...localImages, editForm]);
     } else if (editingIndex !== null) {
       // Editing existing image
+      if( type === 'resort') {
+        updateResortImage(editForm);
+      } else {
+      console.log('editForm', editForm);
+      updateCarouselImage(editForm);
+      }
       const updated = [...localImages];
       updated[editingIndex] = editForm;
       setLocalImages(updated);
     }
     setEditingIndex(null);
-    setEditForm({ url: '', alt: '', caption: '' });
+    setEditForm({id:'', url: '', alt: '', caption: '' });
   };
 
   const handleCancelEdit = () => {
     setEditingIndex(null);
-    setEditForm({ url: '', alt: '', caption: '' });
+    setEditForm({id:'', url: '', alt: '', caption: '' });
   };
 
   const handleDeleteImage = (index: number) => {
+    if (type === 'resort') {
+      deleteResortImage(localImages[index].id);
+    } else {
+      deleteCarouselImage(localImages[index].id);
+    }
     setLocalImages(localImages.filter((_, i) => i !== index));
   };
 
@@ -222,8 +285,8 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
                         draggedIndex === index ? 'opacity-50 scale-95' : ''
                       }`}
                       draggable
-                      onDragStart={(e) => handleDragStart(e, index)}
-                      onDragOver={(e) => handleDragOverItem(e, index)}
+                      onDragStart={(e: any) => handleDragStart(e, index)}
+                      onDragOver={(e: any) => handleDragOverItem(e, index)}
                       onDragLeave={handleDragLeaveItem}
                       onDrop={(e) => handleDropItem(e, index)}
                       onDragEnd={handleDragEnd}

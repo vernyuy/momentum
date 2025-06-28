@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface Speaker {
   id: string;
   name: string;
@@ -8,6 +9,7 @@ export interface Speaker {
 }
 
 export interface AgendaItem {
+  id(id: any): unknown;
   time: string;
   title: string;
   speaker?: string;
@@ -165,126 +167,129 @@ export const speakers: Speaker[] = [
 ];
 
 export const fridayAgenda: AgendaItem[] = [
-  {
-    time: '08:00',
-    title: 'Registration & Welcome Coffee',
-    type: 'break',
-    emoji: '☕'
-  },
-  {
-    time: '09:00',
-    title: 'Opening Keynote: Brain Health & Performance',
-    speaker: 'Dr. Marc Milstein',
-    type: 'session',
-    emoji: '🧠'
-  },
-  {
-    time: '10:30',
-    title: 'Networking Break',
-    type: 'break',
-    emoji: '🤝'
-  },
-  {
-    time: '11:00',
-    title: 'Compliance in Modern Healthcare',
-    speaker: 'Jill Glenn',
-    type: 'session',
-    emoji: '📋'
-  },
-  {
-    time: '12:30',
-    title: 'Lunch & Learn',
-    type: 'meal',
-    emoji: '🍽️'
-  },
-  {
-    time: '14:00',
-    title: 'Legal Trends & Best Practices',
-    speaker: 'Jayme Matchinski',
-    type: 'session',
-    emoji: '⚖️'
-  },
-  {
-    time: '15:30',
-    title: 'Afternoon Refreshments',
-    type: 'break',
-    emoji: '🥤'
-  },
-  {
-    time: '16:00',
-    title: 'Advanced Surgical Techniques',
-    speaker: 'Dr. Andrew Loetscher',
-    type: 'session',
-    emoji: '🏥'
-  },
-  {
-    time: '19:00',
-    title: 'Welcome Reception & Live Music',
-    type: 'party',
-    emoji: '🎸'
-  },
+  // {
+  //   time: '08:00',
+  //   title: 'Registration & Welcome Coffee',
+  //   type: 'break',
+  //   emoji: '☕'
+  // },
+  // {
+  //   time: '09:00',
+  //   title: 'Opening Keynote: Brain Health & Performance',
+  //   speaker: 'Dr. Marc Milstein',
+  //   type: 'session',
+  //   emoji: '🧠'
+  // },
+  // {
+  //   time: '10:30',
+  //   title: 'Networking Break',
+  //   type: 'break',
+  //   emoji: '🤝'
+  // },
+  // {
+  //   time: '11:00',
+  //   title: 'Compliance in Modern Healthcare',
+  //   speaker: 'Jill Glenn',
+  //   type: 'session',
+  //   emoji: '📋'
+  // },
+  // {
+  //   time: '12:30',
+  //   title: 'Lunch & Learn',
+  //   type: 'meal',
+  //   emoji: '🍽️'
+  // },
+  // {
+  //   time: '14:00',
+  //   title: 'Legal Trends & Best Practices',
+  //   speaker: 'Jayme Matchinski',
+  //   type: 'session',
+  //   emoji: '⚖️'
+  // },
+  // {
+  //   time: '15:30',
+  //   title: 'Afternoon Refreshments',
+  //   type: 'break',
+  //   emoji: '🥤'
+  // },
+  // {
+  //   time: '16:00',
+  //   title: 'Advanced Surgical Techniques',
+  //   speaker: 'Dr. Andrew Loetscher',
+  //   type: 'session',
+  //   emoji: '🏥'
+  // },
+  // {
+  //   time: '19:00',
+  //   title: 'Welcome Reception & Live Music',
+  //   type: 'party',
+  //   emoji: '🎸'
+  // },
 ];
 
 export const saturdayAgenda: AgendaItem[] = [
-  {
-    time: '08:00',
-    title: 'Continental Breakfast',
-    type: 'meal',
-    emoji: '🥐'
-  },
-  {
-    time: '09:00',
-    title: 'Mind-Body Wellness Workshop',
-    speaker: 'Dr. Micah Sadigh',
-    type: 'session',
-    emoji: '🧘'
-  },
-  {
-    time: '10:30',
-    title: 'Coffee & Networking',
-    type: 'break',
-    emoji: '☕'
-  },
-  {
-    time: '11:00',
-    title: 'Interactive Panel Discussion',
-    speaker: 'All Speakers',
-    type: 'session',
-    emoji: '💬'
-  },
-  {
-    time: '12:30',
-    title: 'Awards Lunch',
-    type: 'meal',
-    emoji: '🏆'
-  },
-  {
-    time: '14:00',
-    title: 'Future Trends & Innovation',
-    speaker: 'Guest Speaker',
-    type: 'session',
-    emoji: '🚀'
-  },
-  {
-    time: '15:30',
-    title: 'Closing Reception',
-    type: 'party',
-    emoji: '🎉'
-  },
+  // {
+  //   time: '08:00',
+  //   title: 'Continental Breakfast',
+  //   type: 'meal',
+  //   emoji: '🥐'
+  // },
+  // {
+  //   time: '09:00',
+  //   title: 'Mind-Body Wellness Workshop',
+  //   speaker: 'Dr. Micah Sadigh',
+  //   type: 'session',
+  //   emoji: '🧘'
+  // },
+  // {
+  //   time: '10:30',
+  //   title: 'Coffee & Networking',
+  //   type: 'break',
+  //   emoji: '☕'
+  // },
+  // {
+  //   time: '11:00',
+  //   title: 'Interactive Panel Discussion',
+  //   speaker: 'All Speakers',
+  //   type: 'session',
+  //   emoji: '💬'
+  // },
+  // {
+  //   time: '12:30',
+  //   title: 'Awards Lunch',
+  //   type: 'meal',
+  //   emoji: '🏆'
+  // },
+  // {
+  //   time: '14:00',
+  //   title: 'Future Trends & Innovation',
+  //   speaker: 'Guest Speaker',
+  //   type: 'session',
+  //   emoji: '🚀'
+  // },
+  // {
+  //   time: '15:30',
+  //   title: 'Closing Reception',
+  //   type: 'party',
+  //   emoji: '🎉'
+  // },
 ];
 
 export const whyAttendItems = [
   {
+    id: '1' ,
     icon: '🎓',
     title: 'Learn',
     description: 'Gain cutting-edge insights from industry leaders and expand your professional knowledge.',
   },
   {
+    id: '2',
     icon: '🤝',
     title: 'Network',
     description: 'Connect with peers, build lasting relationships, and expand your professional circle.',
   },
   {
+    id: '3',
     icon: '📈',
     title: 'Grow',
     description: 'Accelerate your career growth with actionable strategies and best practices.',

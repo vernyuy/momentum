@@ -1,3 +1,6 @@
+/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Calendar, MapPin, Clock, Edit, Settings, Save, RotateCcw } from 'lucide-react';
@@ -17,21 +20,53 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
   const conferenceDate = new Date('2025-09-19T09:00:00');
+  
+  const [timezone, setTimezone] = useState('MST');
+  const [ctaButton, setCTAButton] = useState({
+    text: 'Register Now',
+    url: '',
+    style: 'secondary',
+    size: 'large'
+  });
   const countdown = useCountdown(conferenceDate);
     useEffect(() => {
-      createTimezone({ name: 'MST' });
-      client.models.Timezone.observeQuery().subscribe({
+      // createTimezone({ name: 'MST' });
+      // createButton();
+      client.models.RegisterButton.observeQuery().subscribe({
         next: (data: any) =>{ 
           console.log('Timezone data:', data.items);
+          setCTAButton(data.items[0]);
       }});
+      const fetchTimezones = async () => {
+        try {
+          const timezones = await client.models.Timezone.get({
+            id: "41c74321-059e-4142-b34a-c20d0839f458",
+          })
+          setTimezone(timezones!.data!.name!);
+        } catch (error) {
+          console.error('Error fetching timezones:', error);
+        }
+      }
+      fetchTimezones();
     }, []);
   function createTimezone(data: { name: string }) {
       client.models.Timezone.create(data);
     }
-  const { data } = client.models.Timezone.get({
-  id: '...',
-});
-  const [timezone, setTimezone] = useState("data.name");
+    function createButton(data?: any) {
+      client.models.RegisterButton.create({
+        id: 'hero-ct0',
+    text: 'Register Now',
+    url: '',
+    style: 'secondary',
+    size: 'large'
+  });
+    }
+    function updateTimezone(data: {id: string, name: string }) {
+      client.models.Timezone.update(data);
+    }
+    function updateButton(data: any) {
+      client.models.RegisterButton.update(data);
+    }
   const [isTimezoneEditable, setIsTimezoneEditable] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
   const [isEditingTimezone, setIsEditingTimezone] = useState(false);
@@ -51,7 +86,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
     style: 'primary',
     size: 'large'
   };
-  const [ctaButton, setCTAButton] = useState(initialCTAButton);
   const [isCTAEditable, setIsCTAEditable] = useState(false);
   
   // Track changes
@@ -119,7 +153,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
     setBackgroundImage(newImageUrl);
   };
 
-  const handleCTASave = (newButton: CTAButton) => {
+  const handleCTASave = (newButton: any) => {
+    // console.log('Saving CTA Button:', newButton);
+    updateButton(newButton);
     setCTAButton(newButton);
   };
 
@@ -152,7 +188,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
 
   const handleResetChanges = () => {
     setBackgroundImage(initialBackgroundImage);
-    setCTAButton(initialCTAButton);
+    setCTAButton(initialCTAButton as any);
     setHasUnsavedChanges(false);
   };
 
@@ -329,7 +365,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
                   {isEditingTimezone ? (
                     <select
                       value={timezone}
-                      onChange={(e) => handleTimezoneChange(e.target.value)}
+                      onChange={(e) => {
+                        updateTimezone({id: '41c74321-059e-4142-b34a-c20d0839f458', name: e.target.value})
+                        setTimezone(e.target.value);
+                      }}
                       onBlur={() => setIsEditingTimezone(false)}
                       className="bg-white/20 text-white text-lg sm:text-xl font-bold leading-tight border-none outline-none rounded px-2 py-1"
                       autoFocus

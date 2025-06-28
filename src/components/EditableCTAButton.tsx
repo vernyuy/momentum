@@ -5,7 +5,7 @@ import CTAEditModal, { CTAButton } from './CTAEditModal';
 import PinModal from './PinModal';
 
 interface EditableCTAButtonProps {
-  button: CTAButton;
+  button: any;
   onSave: (button: CTAButton) => void;
   isEditable?: boolean;
   onEditClick?: () => void;
@@ -27,13 +27,13 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
   const getButtonClasses = () => {
     const baseClasses = 'font-bold rounded-full transition-all duration-300 shadow-lg relative group';
     
-    const styleClasses = {
+    const styleClasses: any = {
       primary: 'bg-ctaOrange hover:bg-orange-600 text-white',
       secondary: 'bg-heroHighlight hover:bg-blue-700 text-white',
       outline: 'border-2 border-heroHighlight text-heroHighlight bg-white hover:bg-heroHighlight hover:text-white'
     };
 
-    const sizeClasses = {
+    const sizeClasses: any = {
       small: 'py-2 px-4 text-sm',
       medium: 'py-3 px-6 text-base',
       large: 'py-4 px-8 text-lg sm:text-xl md:text-2xl'

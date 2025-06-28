@@ -4,10 +4,10 @@ import { X, Type, Link, Save, Palette } from 'lucide-react';
 
 export interface CTAButton {
   id: string;
-  text: string;
+  text?: string;
   url?: string;
-  style: 'primary' | 'secondary' | 'outline';
-  size: 'small' | 'medium' | 'large';
+  style?: 'primary' | 'secondary' | 'outline';
+  size?: 'small' | 'medium' | 'large';
 }
 
 interface CTAEditModalProps {
@@ -217,7 +217,7 @@ const CTAEditModal: React.FC<CTAEditModalProps> = ({
                   </label>
                   <div className="bg-gray-50 rounded-xl p-8 text-center">
                     <motion.button
-                      className={getButtonClasses(formData.style, formData.size)}
+                      className={getButtonClasses(formData!.style!, formData!.size!)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       type="button"
