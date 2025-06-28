@@ -31,15 +31,15 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
     image: ''
   });
   
-    function createSpeaker() {
-      client.models.Speaker.create({ 
-        name: 'Jill Glenn',
-        title: 'Founder, CEO',
-        bio: 'An industry leader with over 25 years of experience building and managing sleep programs across the U.S.',
-        fullBio: 'Jill has been an advocate and a leader within the sleep field for more than 25 years. She has been personally involved in the development, integration, and management of hundreds of sleep centers and DME providers, helping diverse organizations launch and sustain long-term sleep apnea programs. Recognized as an expert in medical billing and regulatory compliance, Jill has helped thousands of patients access essential sleep testing, durable medical equipment (DME), and compliance support. She is the founder and CEO of Dedicated Sleep.',
-        image: ''
-      });
-    }
+    // function createSpeaker() {
+    //   client.models.Speaker.create({ 
+    //     name: 'Jill Glenn',
+    //     title: 'Founder, CEO',
+    //     bio: 'An industry leader with over 25 years of experience building and managing sleep programs across the U.S.',
+    //     fullBio: 'Jill has been an advocate and a leader within the sleep field for more than 25 years. She has been personally involved in the development, integration, and management of hundreds of sleep centers and DME providers, helping diverse organizations launch and sustain long-term sleep apnea programs. Recognized as an expert in medical billing and regulatory compliance, Jill has helped thousands of patients access essential sleep testing, durable medical equipment (DME), and compliance support. She is the founder and CEO of Dedicated Sleep.',
+    //     image: ''
+    //   });
+    // }
 
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);

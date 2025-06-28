@@ -39,14 +39,14 @@ const WhyAttendSection: React.FC = () => {
             console.log('Why Attend data:', data.items);
         }});
       }, [whyAttendItems]);
-    async function createWhyAttend(data?: any) {
-        const res = await client.models.WhyAttend.create({
-          icon: '🎓',
-          title: 'Learn',
-          description: 'Gain cutting-edge insights from industry leaders and expand your professional knowledge.',
-        });
-        console.log('Created Why Attend item:', res);
-      }
+    // async function createWhyAttend(data?: any) {
+    //     const res = await client.models.WhyAttend.create({
+    //       icon: '🎓',
+    //       title: 'Learn',
+    //       description: 'Gain cutting-edge insights from industry leaders and expand your professional knowledge.',
+    //     });
+    //     console.log('Created Why Attend item:', res);
+    //   }
 
       function updateWhyAttend(data: any) {
         client.models.WhyAttend.update(data);

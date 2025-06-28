@@ -20,7 +20,7 @@ const SpeakersSection: React.FC = () => {
     });
   }, []);
 
-  function createSpeaker(speaker: Speaker) {
+  function createSpeaker(speaker: any) {
     client.models.Speaker.create(speaker);
   }
   async function deleteSpeaker(speakerId: string) {
@@ -29,7 +29,7 @@ const SpeakersSection: React.FC = () => {
       id: speakerId
     });
   }
-  async function updateSpeaker(speaker: Speaker) {
+  async function updateSpeaker(speaker: any) {
     await client.models.Speaker.update(speaker);
   }
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
@@ -323,7 +323,7 @@ const SpeakersSection: React.FC = () => {
 
           {/* Speakers Grid */}
           <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5 content-start">
-            {speakers.map((speaker, index) => (
+            {speakers.map((speaker: any, index: number) => (
               <motion.div
                 key={speaker.id}
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -337,7 +337,7 @@ const SpeakersSection: React.FC = () => {
                   } ${draggedSpeaker?.id === speaker.id ? 'opacity-50 scale-95' : ''
                   }`}
                 draggable={isEditMode}
-                onDragStart={(e) => handleDragStart(e, speaker)}
+                onDragStart={(e:any) => handleDragStart(e, speaker)}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, index)}

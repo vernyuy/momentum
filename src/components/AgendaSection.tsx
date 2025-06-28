@@ -29,9 +29,9 @@ const AgendaSection: React.FC = () => {
       id: agendaId
     });
   }
-  async function updateAgendaItem(agenda: any) {
-    await client.models.Agenda.update(agenda);
-  }
+  // async function updateAgendaItem(agenda: any) {
+  //   await client.models.Agenda.update(agenda);
+  // }
 
   const [activeTab, setActiveTab] = useState<'friday' | 'saturday'>('friday');
   const [isEditMode, setIsEditMode] = useState(false);
@@ -69,7 +69,7 @@ const AgendaSection: React.FC = () => {
     }
   };
 
-  const currentAgenda = activeTab === 'friday' ? localFridayAgenda : localSaturdayAgenda;
+  // const currentAgenda = activeTab === 'friday' ? localFridayAgenda : localSaturdayAgenda;
 
   const handlePinSuccess = () => {
     setShowPinModal(false);
@@ -100,9 +100,7 @@ const AgendaSection: React.FC = () => {
   };
 
   const handleDeleteItem = (agenda: any) => {
-    deleteAgendaItem({
-      id: agenda.id as string,
-    });
+    deleteAgendaItem(agenda.id as string);
     // if (activeTab === 'friday') {
     //   setLocalFridayAgenda(prev => prev.filter((_, i) => i !== index));
     // } else {
@@ -331,7 +329,7 @@ const AgendaSection: React.FC = () => {
             className="max-w-4xl mx-auto"
           >
             <div className="space-y-4">
-              {agendaItems.map((item, index) => (
+              {agendaItems.map((item:any, index: any) => (
                 <motion.div
                   // key={index}
                   initial={{ opacity: 0, y: 20 }}

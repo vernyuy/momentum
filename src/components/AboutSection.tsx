@@ -75,6 +75,7 @@ const AboutSection: React.FC = () => {
     subHeading: initialSubHeading,
     description: initialDescription
   });
+  console.log('contentEditForm:', contentEditForm);
 
   // Initial conference images
   const initialImages: CarouselImage[] = [

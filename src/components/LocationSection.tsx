@@ -86,29 +86,29 @@ const LocationSection: React.FC = () => {
       }
     });
   }, [hotelInfo]);
-  async function createHotel(data?: any) {
-    const res = await client.models.Hotel.create({
-      name: 'The Westin Kierland Resort & Spa',
-      address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
-      phone: '(480) 991-4000'
-    });
-    console.log('Created Why Attend item:', res);
-  }
-  async function createNotice(data?: any) {
-    const res = await client.models.Notice.create({
-      content: 'Hotel room block closes on August 19, 2025. Reserve your room early to secure conference rates!'
-    });
-    console.log('Created Why Attend item:', res);
-  }
+  // async function createHotel(data?: any) {
+  //   const res = await client.models.Hotel.create({
+  //     name: 'The Westin Kierland Resort & Spa',
+  //     address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
+  //     phone: '(480) 991-4000'
+  //   });
+  //   console.log('Created Why Attend item:', res);
+  // }
+  // async function createNotice(data?: any) {
+  //   const res = await client.models.Notice.create({
+  //     content: 'Hotel room block closes on August 19, 2025. Reserve your room early to secure conference rates!'
+  //   });
+  //   console.log('Created Why Attend item:', res);
+  // }
 
-  async function createResort(data?: any) {
-    const res = await client.models.ResortImages.create({
-      url: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
-      alt: 'Westin Kierland Resort exterior',
-      caption: 'Beautiful resort exterior with desert landscape'
-    });
-    console.log('Created resort item:', res);
-  }
+  // async function createResort(data?: any) {
+  //   const res = await client.models.ResortImages.create({
+  //     url: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
+  //     alt: 'Westin Kierland Resort exterior',
+  //     caption: 'Beautiful resort exterior with desert landscape'
+  //   });
+  //   console.log('Created resort item:', res);
+  // }
 
   function updateHotel(data: any) {
     client.models.Hotel.update(data);

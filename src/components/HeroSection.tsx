@@ -1,6 +1,3 @@
-/* eslint-disable */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Calendar, MapPin, Clock, Edit, Settings, Save, RotateCcw } from 'lucide-react';
@@ -49,19 +46,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
       }
       fetchTimezones();
     }, []);
-  function createTimezone(data: { name: string }) {
-      client.models.Timezone.create(data);
-    }
-    function createButton(data?: any) {
-      client.models.RegisterButton.create({
-        id: 'hero-ct0',
-    text: 'Register Now',
-    url: '',
-    style: 'secondary',
-    size: 'large'
-  });
-    }
-    function updateTimezone(data: {id: string, name: string }) {
+  // function createTimezone(data: { name: string }) {
+  //     client.models.Timezone.create(data);
+  //   }
+  //   function createButton(data?: any) {
+  //     client.models.RegisterButton.create({
+  //       id: 'hero-cta',
+  //   text: 'Register Now',
+  //   url: '',
+  //   style: 'secondary',
+  //   size: 'large'
+  // });
+    // }
+    function updateTimezone(data: any) {
       client.models.Timezone.update(data);
     }
     function updateButton(data: any) {

@@ -27,6 +27,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
   day 
 }) => {
     const [agendaItems, setAgendaItems] = useState<Array<Schema["Agenda"]["type"]>>([]);
+    console.log('Agenda items:', agendaItems);
 
   useEffect(() => {
     client.models.Agenda.observeQuery().subscribe({
@@ -39,12 +40,12 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
     const res = await client.models.Agenda.create(agenda);
     console.log("Created agenda item:", res);
   }
-  async function deleteAgendaItem(agendaId: string) {
-    console.log("Deleting agenda with ID:", agendaId);
-    await client.models.Agenda.delete({
-      id: agendaId
-    });
-  }
+  // async function deleteAgendaItem(agendaId: string) {
+  //   console.log("Deleting agenda with ID:", agendaId);
+  //   await client.models.Agenda.delete({
+  //     id: agendaId
+  //   });
+  // }
   async function updateAgendaItem(agenda: any) {
     await client.models.Agenda.update(agenda);
   }
@@ -78,7 +79,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
     setSelectedDate(day);
   }, [item, day, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     const txt =  e.nativeEvent?.submitter.childNodes[0].nodeValue
     e.preventDefault();
     const itemToSave = {
