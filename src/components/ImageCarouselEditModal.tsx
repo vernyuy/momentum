@@ -9,7 +9,6 @@ import { getUrl, uploadData } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
 export interface CarouselImage {
-  id: any;
   url: string;
   alt: string;
   caption?: string;
@@ -30,9 +29,9 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   images,
   type = 'resort'
 }) => {
-  const [localImages, setLocalImages] = useState<CarouselImage[]>(images);
+  const [localImages, setLocalImages] = useState<any[]>(images);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({id:'', url: '', alt: '', caption: '' });
+  const [editForm, setEditForm] = useState({ url: '', alt: '', caption: '' });
   const [isDragging, setIsDragging] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -59,6 +58,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     }
     }, [images, isOpen]);
   async function createCarouselImage(data?: any) {
+      console.log('createCarouselImage response:');
       const res = await client.models.CarouselImage.create(data);
       console.log('createCarouselImage response:', res);
     }
@@ -90,19 +90,19 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const handleClose = () => {
     setLocalImages(images);
     setEditingIndex(null);
-    setEditForm({id:'', url: '', alt: '', caption: '' });
+    setEditForm({url: '', alt: '', caption: '' });
     onClose();
   };
 
   const handleAddImage = () => {
     setEditingIndex(-1);
-    setEditForm({id:'', url: '', alt: '', caption: '' });
+    setEditForm({url: '', alt: '', caption: '' });
   };
 
   const handleEditImage = (index: number) => {
     setEditingIndex(index);
     const image = localImages[index];
-    setEditForm({id: image?.id!, url: image?.url!, alt: image?.alt!, caption: image?.caption! || '' });
+    setEditForm({url: image?.url!, alt: image?.alt!, caption: image?.caption! || '' });
   };
 
   const handleSaveEdit = () => {
@@ -110,6 +110,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     if (editingIndex === -1) {
       // Adding new image
       console.log('editForm', editForm);
+        createResortImage(editForm);
       if( type === 'resort') {
         createResortImage(editForm);
       } else {
@@ -129,12 +130,12 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
       setLocalImages(updated);
     }
     setEditingIndex(null);
-    setEditForm({id:'', url: '', alt: '', caption: '' });
+    setEditForm({url: '', alt: '', caption: '' });
   };
 
   const handleCancelEdit = () => {
     setEditingIndex(null);
-    setEditForm({id:'', url: '', alt: '', caption: '' });
+    setEditForm({url: '', alt: '', caption: '' });
   };
 
   const handleDeleteImage = (index: number) => {

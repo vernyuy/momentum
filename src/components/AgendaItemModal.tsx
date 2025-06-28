@@ -51,7 +51,6 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
   }
 
   const [formData, setFormData] = useState<any>({
-    id: '',
     time: '',
     title: '',
     speaker: '',
@@ -67,7 +66,6 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
       setFormData(item);
     } else {
       setFormData({
-        id: '',
         time: '',
         title: '',
         speaker: '',
@@ -99,7 +97,6 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
 
   const handleClose = () => {
     setFormData({
-      id: '',
       time: '',
       title: '',
       speaker: '',

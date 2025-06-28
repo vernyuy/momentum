@@ -22,8 +22,7 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
   onSave, 
   speaker 
 }) => {
-  const [formData, setFormData] = useState<Speaker>({
-    id: '',
+  const [formData, setFormData] = useState<any>({
     name: '',
     title: '',
     bio: '',
@@ -51,7 +50,6 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
       setImagePreview(speaker.image || '');
     } else {
       setFormData({
-        id: Date.now().toString(),
         name: '',
         title: '',
         bio: '',
@@ -70,7 +68,6 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
 
   const handleClose = () => {
     setFormData({
-      id: '',
       name: '',
       title: '',
       bio: '',

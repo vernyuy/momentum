@@ -11,7 +11,6 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 
 interface WhyAttendItem {
-  id: string;
   icon: string;
   title: string;
   description: string;
@@ -53,8 +52,7 @@ const WhyAttendSection: React.FC = () => {
       }
   
   // Edit form state for individual cards
-  const [editForm, setEditForm] = useState<WhyAttendItem>({
-    id: '',
+  const [editForm, setEditForm] = useState<any>({
     icon: '',
     title: '',
     description: ''
@@ -93,13 +91,13 @@ const WhyAttendSection: React.FC = () => {
       updatedItems[editingCardIndex] = editForm;
       setWhyAttendItems(updatedItems);
       setEditingCardIndex(null);
-      setEditForm({ id:'', icon: '', title: '', description: '' });
+      setEditForm({ icon: '', title: '', description: '' });
     }
   };
 
   const handleCancelCardEdit = () => {
     setEditingCardIndex(null);
-    setEditForm({id:'', icon: '', title: '', description: '' });
+    setEditForm({icon: '', title: '', description: '' });
   };
 
   const handleSaveChanges = async () => {

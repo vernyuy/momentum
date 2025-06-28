@@ -9,7 +9,6 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 
 interface TravelOption {
-  id: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   title: string;
   content: {
@@ -100,15 +99,6 @@ const [travelOptions, setTravelOptions] = useState<any[]>([])
 }, []);
 
 
-  function createSpeaker(speaker: any) {
-    client.models.Speaker.create(speaker);
-  }
-  async function deleteSpeaker(speakerId: string) {
-    console.log("Deleting speaker with ID:", speakerId);
-    await client.models.Speaker.delete({
-      id: speakerId
-    });
-  }
   async function updateAirTravel(data: any) {
     const res = await client.models.AirTravel.update(data);
     console.log("Ground transport updated:", res);
