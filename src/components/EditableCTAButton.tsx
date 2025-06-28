@@ -39,7 +39,7 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
       large: 'py-4 px-8 text-lg sm:text-xl md:text-2xl'
     };
 
-    return `${baseClasses} ${styleClasses[button.style]} ${sizeClasses[button.size]} ${className}`;
+    return `${baseClasses} ${styleClasses[button?.style!]} ${sizeClasses[button?.size!]} ${className}`;
   };
 
   const handleButtonClick = () => {
@@ -81,7 +81,7 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
         }}
         whileTap={{ scale: 0.95 }}
       >
-        {button.text}
+        {button?.text!}
         
         {/* Edit Button */}
         <motion.button
