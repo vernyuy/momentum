@@ -5,7 +5,7 @@ import { X, Plus, Edit, Trash2, GripVertical, Upload, Camera, Save } from 'lucid
 
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { uploadData } from 'aws-amplify/storage';
+import { getUrl, uploadData } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
 export interface CarouselImage {
@@ -149,14 +149,16 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const handleImageUpload = async (file: File) => {
     let imageUrl = '';
     if (file) {
-        const fileName = `pictures/${Date.now()}-${file.name}`;
+        const fileName = `${Date.now()}-${file.name}`;
         const uploadResult = await uploadData({
           key: fileName,
           data: file,
         }).result;
-
-        imageUrl = uploadResult.key;
-        setEditForm({ ...editForm, url: imageUrl });
+        const { url } = await getUrl({
+              key: fileName
+            });
+        // imageUrl = `https://amplify-amplifyvitereactt-momentumstoragebucket569-f2ydx7csbjip.s3.amazonaws.com/public/${uploadResult.key}`;
+        setEditForm({ ...editForm, url: url.toString() });
 
       }
     // if (file && file.type.startsWith('image/')) {
