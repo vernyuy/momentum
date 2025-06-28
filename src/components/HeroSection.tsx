@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Calendar, MapPin, Clock, Edit, Settings, Save, RotateCcw } from 'lucide-react';
 import { useCountdown } from '../hooks/useCountdown';
@@ -6,15 +6,32 @@ import PinModal from './PinModal';
 import HeroImageEditModal from './HeroImageEditModal';
 import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+
+const client = generateClient<Schema>();
+
 interface HeroSectionProps {
   onScrollToNext: () => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
   const conferenceDate = new Date('2025-09-19T09:00:00');
   const countdown = useCountdown(conferenceDate);
-  
-  const [timezone, setTimezone] = useState('MST');
+    useEffect(() => {
+      createTimezone({ name: 'MST' });
+      client.models.Timezone.observeQuery().subscribe({
+        next: (data: any) =>{ 
+          console.log('Timezone data:', data.items);
+      }});
+    }, []);
+  function createTimezone(data: { name: string }) {
+      client.models.Timezone.create(data);
+    }
+  const { data } = client.models.Timezone.get({
+  id: '...',
+});
+  const [timezone, setTimezone] = useState("data.name");
   const [isTimezoneEditable, setIsTimezoneEditable] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
   const [isEditingTimezone, setIsEditingTimezone] = useState(false);

@@ -1,9 +1,8 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
-import { Hotel } from "lucide-react";
 const schema = a.schema({
-  Todo: a.model({
-      content: a.string(),
-    }).authorization((allow) => [allow.publicApiKey()]),
+  Timezone: a.model({
+    name: a.string()
+  }).authorization((allow) => [allow.publicApiKey()]),
 
   Speaker: a.model({
     name: a.string(),

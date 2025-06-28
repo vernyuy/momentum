@@ -5,10 +5,6 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import ImageCarousel, { CarouselImage } from './ImageCarousel';
 import ImageCarouselEditModal from './ImageCarouselEditModal';
 import PinModal from './PinModal';
-import type { Schema } from "../../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-const client = generateClient<Schema>();
 
 interface HotelInfo {
   name: string;
@@ -23,29 +19,11 @@ const LocationSection: React.FC = () => {
   const [showHotelEditModal, setShowHotelEditModal] = useState(false);
   const [showNoticeEditModal, setShowNoticeEditModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<'edit' | 'cta1' | 'cta2' | 'images' | 'hotel' | 'notice' | null>(null);
-  function createHotel() {
-    client.models.Hotel.create({
-    name: 'The Westin Kierland Resort & Spa',
-    address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
-    phone: '(480) 991-4000'
-  });
-  }
-  async function deleteSpeaker(speakerId: string) {
-    console.log("Deleting speaker with ID:", speakerId);
-    await client.models.Speaker.delete({
-      id: speakerId
-    });
-  }
-  async function updateAirTravel(data: any) {
-    const res = await client.models.AirTravel.update(data);
-    console.log("Ground transport updated:", res);
-  }
+
   // Section heading state
   const initialHeading = 'Conference Location';
   const [sectionHeading, setSectionHeading] = useState(initialHeading);
-// const { data, errors } = await client.models.Hotel.get({
-//   id: '...',
-// });
+
   // Hotel information state
   const initialHotelInfo: HotelInfo = {
     name: 'The Westin Kierland Resort & Spa',
@@ -176,7 +154,6 @@ const LocationSection: React.FC = () => {
 
   // Check for changes whenever any content changes
   useEffect(() => {
-    createHotel()
     const headingChanged = sectionHeading !== initialHeading;
     const hotelChanged = JSON.stringify(hotelInfo) !== JSON.stringify(initialHotelInfo);
     const noticeChanged = noticeText !== initialNoticeText;
