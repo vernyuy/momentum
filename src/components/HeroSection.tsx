@@ -305,7 +305,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <span className="bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-lg">
+              <span className=" text-white text-transparent drop-shadow-lg">
                 Momentum 2025!
               </span>
             </motion.h1>
