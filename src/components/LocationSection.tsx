@@ -68,8 +68,8 @@ const LocationSection: React.FC = () => {
     client.models.RegisterButton.observeQuery().subscribe({
       next: (data: any) => {
         console.log('Timezone data:', data.items);
-        setCTAButton1(data.items[0]);
-        setCTAButton2(data.items[0]);
+        // setCTAButton1(data.items[2]);
+        // setCTAButton2(data.items[3]);
       }
     });
     client.models.Hotel.observeQuery().subscribe({
