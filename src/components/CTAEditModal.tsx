@@ -166,7 +166,7 @@ const CTAEditModal: React.FC<CTAEditModalProps> = ({
                         type="button"
                         onClick={() => setFormData({ ...formData, style: option.value as CTAButton['style'] })}
                         className={`w-full p-4 rounded-lg border-2 transition-all flex items-center justify-between ${
-                          formData.style === option.value
+                          formData!.style === option.value
                             ? 'border-heroHighlight bg-heroHighlight/10'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}

@@ -37,7 +37,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
       const fetchTimezones = async () => {
         try {
           const timezones = await client.models.Timezone.get({
-            id: "41c74321-059e-4142-b34a-c20d0839f458",
+            id: "24f381e3-fdcb-48c6-852e-028eb2a47851",
           })
           setTimezone(timezones!.data!.name!);
         } catch (error) {
@@ -363,7 +363,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
                     <select
                       value={timezone}
                       onChange={(e) => {
-                        updateTimezone({id: '41c74321-059e-4142-b34a-c20d0839f458', name: e.target.value})
+                        updateTimezone({id: '24f381e3-fdcb-48c6-852e-028eb2a47851', name: e.target.value})
                         setTimezone(e.target.value);
                       }}
                       onBlur={() => setIsEditingTimezone(false)}
