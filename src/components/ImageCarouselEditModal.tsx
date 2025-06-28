@@ -5,6 +5,7 @@ import { X, Plus, Edit, Trash2, GripVertical, Upload, Camera, Save } from 'lucid
 
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { uploadData } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
 export interface CarouselImage {
@@ -36,6 +37,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   // useEffect(() => {
   //   setLocalImages(images);
@@ -78,6 +80,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     function deleteResortImage(id: any) {
       client.models.ResortImages.delete(id);
     }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(localImages);
@@ -143,15 +146,27 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     setLocalImages(localImages.filter((_, i) => i !== index));
   };
 
-  const handleImageUpload = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setEditForm({ ...editForm, url: result });
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageUpload = async (file: File) => {
+    let imageUrl = '';
+    if (file) {
+        const fileName = `images/${Date.now()}-${file.name}`;
+        const uploadResult = await uploadData({
+          key: fileName,
+          data: file,
+        }).result;
+
+        imageUrl = uploadResult.key;
+        setEditForm({ ...editForm, url: imageUrl });
+
+      }
+    // if (file && file.type.startsWith('image/')) {
+    //   const reader = new FileReader();
+    //   reader.onload = (e) => {
+    //     const result = e.target?.result as string;
+    //     setEditForm({ ...editForm, url: result });
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
