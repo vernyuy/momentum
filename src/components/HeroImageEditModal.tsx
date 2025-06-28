@@ -25,7 +25,7 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [suggestedImages, setSuggestedImages] = useState<any[]>([])
+  // const [suggestedImages, setSuggestedImages] = useState<any[]>([])
 
   useEffect(() => {
     setImageUrl(currentImage);
@@ -33,31 +33,27 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
   }, [currentImage, isOpen]);
 
 
-  useEffect(() => {
-    client.models.Hero.observeQuery().subscribe({
-      next: (data: any) => {
-        console.log('hero data:', data.items);
-        setSuggestedImages(data.items);
-      }
-    });
-  }, []);
-
-  async function createHeroImage(data: { isActive: boolean, imageUrl: string }) {
+  async function createHeroImage(data: any) {
     console.log('createHeroImage response:');
     const res = await client.models.Hero.create(data)
     console.log('createHeroImage response:', res);
+  }
+
+  async function updateHero(data: any){
+    await client.models.Hero.update(data)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate saving delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     createHeroImage({
+      id: '1',
       isActive: true,
       imageUrl: imageUrl
     })
+    updateHero({imageUrl: imageUrl, id: '1'})
     onSave(imageUrl);
     setIsLoading(false);
     onClose();
@@ -81,27 +77,11 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
         key: fileName
       });
       setImagePreview(url.toString());
-      setImageUrl(fileName);
+      setImageUrl(url.toString());
 
     }
   };
 
-  const getLink = (fileName: string)=>{
-    console.log("Deve",fileName)
-    if(fileName?.startsWith('https:')){
-      return fileName
-    }
-    let link = ''
-     getUrl({
-        key: fileName
-      }).then((data)=>{
-
-      console.log("Linnk", data)
-        link = data.url.toString()
-      })
-      console.log("Linnk", link)
-      return link
-  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -141,38 +121,38 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
   };
 
   // Suggested high-quality background images
-  // const suggestedImages = [
-  //   {
-  //     url: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Conference Presentation',
-  //     description: 'Professional conference setting'
-  //   },
-  //   {
-  //     url: 'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Business Networking',
-  //     description: 'Professional networking event'
-  //   },
-  //   {
-  //     url: 'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Modern Venue',
-  //     description: 'Contemporary conference venue'
-  //   },
-  //   {
-  //     url: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Workshop Session',
-  //     description: 'Interactive learning environment'
-  //   },
-  //   {
-  //     url: 'https://images.pexels.com/photos/2774570/pexels-photo-2774570.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Keynote Speaker',
-  //     description: 'Inspiring keynote presentation'
-  //   },
-  //   {
-  //     url: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
-  //     title: 'Conference Dining',
-  //     description: 'Professional dining experience'
-  //   }
-  // ];
+  const suggestedImages = [
+    {
+      url: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Conference Presentation',
+      description: 'Professional conference setting'
+    },
+    {
+      url: 'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Business Networking',
+      description: 'Professional networking event'
+    },
+    {
+      url: 'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Modern Venue',
+      description: 'Contemporary conference venue'
+    },
+    {
+      url: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Workshop Session',
+      description: 'Interactive learning environment'
+    },
+    {
+      url: 'https://images.pexels.com/photos/2774570/pexels-photo-2774570.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Keynote Speaker',
+      description: 'Inspiring keynote presentation'
+    },
+    {
+      url: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Conference Dining',
+      description: 'Professional dining experience'
+    }
+  ];
 
   return (
     <AnimatePresence>
@@ -225,7 +205,7 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
                   </label>
                   <div className="relative aspect-[16/9] rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src={getLink(imagePreview)}
+                      src={imagePreview}
                       alt="Hero background preview"
                       className="w-full h-full object-cover"
                     />
@@ -281,7 +261,7 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
                     </label>
                     <input
                       type="url"
-                      value={getLink(imageUrl)}
+                      value={imageUrl}
                       onChange={handleUrlChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heroHighlight focus:border-transparent"
                       placeholder="https://example.com/image.jpg"
@@ -303,6 +283,7 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
                             : 'border-gray-200 hover:border-heroHighlight/50'
                           }`}
                         onClick={() => {
+                          updateHero({imageUrl:image?.url!, id: "1" })
                           setImageUrl(image?.url!);
                           setImagePreview(image?.url!);
                         }}
@@ -310,7 +291,7 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
                         whileTap={{ scale: 0.98 }}
                       >
                         <img
-                          src={getLink(image?.url!)}
+                          src={image?.url!}
                           alt={image?.title!}
                           className="w-full h-full object-cover"
                         />

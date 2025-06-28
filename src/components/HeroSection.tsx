@@ -27,22 +27,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
     style: 'secondary',
     size: 'large'
   });
-    const getLink = (fileName: string)=>{
-      console.log("Deve",fileName)
-      if(fileName?.startsWith('https:')){
-        return fileName
-      }
-      let link = ''
-       getUrl({
-          key: fileName
-        }).then((data)=>{
 
-      console.log("Linnk", data)
-          link = data.url.toString()
-        })
-      console.log("Linnk", link)
-        return link
-    }
   const countdown = useCountdown(conferenceDate);
     useEffect(() => {
       // createTimezone({ name: 'MST' });
@@ -117,9 +102,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
 
   // Check for changes
   React.useEffect(() => {
-    const backgroundChanged = backgroundImage !== initialBackgroundImage;
-    const ctaChanged = JSON.stringify(ctaButton) !== JSON.stringify(initialCTAButton);
-    setHasUnsavedChanges(backgroundChanged || ctaChanged);
+    const fetchTimezones = async () => {
+        try {
+          const data = await client.models.Hero.get({
+            id: "1",
+          })
+          setBackgroundImage(data.data.imageUrl)
+        } catch (error) {
+          console.error('Error fetching Hero Image:', error);
+        }
+      }
+      fetchTimezones();
   }, [backgroundImage, ctaButton]);
 
   const handleTimezoneEditClick = () => {
@@ -213,7 +206,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
         {/* Background Image - No overlay or blur */}
         <div className="absolute inset-0">
           <img
-            src={getLink(backgroundImage)}
+            src={backgroundImage}
             alt="Conference venue background"
             className="w-full h-full object-cover"
           />
