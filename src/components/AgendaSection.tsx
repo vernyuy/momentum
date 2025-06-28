@@ -23,6 +23,13 @@ const AgendaSection: React.FC = () => {
   function createAgendaItem(agenda: any) {
     client.models.Agenda.create(agenda);
   }
+
+  const fridayAgendas = agendaItems.filter(item => {
+    return item.day === 'friday';
+  });
+  const saturdaydayAgendas = agendaItems.filter(item => {
+    return item.day === 'saturday';
+  });
   async function deleteAgendaItem(agendaId: string) {
     console.log("Deleting agenda with ID:", agendaId);
     await client.models.Agenda.delete({
