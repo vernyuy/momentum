@@ -5,7 +5,7 @@ import CTAEditModal, { CTAButton } from './CTAEditModal';
 import PinModal from './PinModal';
 
 interface EditableCTAButtonProps {
-  button: any;
+  button: CTAButton;
   onSave: (button: CTAButton) => void;
   isEditable?: boolean;
   onEditClick?: () => void;
@@ -27,24 +27,24 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
   const getButtonClasses = () => {
     const baseClasses = 'font-bold rounded-full transition-all duration-300 shadow-lg relative group';
     
-    const styleClasses: any = {
+    const styleClasses = {
       primary: 'bg-ctaOrange hover:bg-orange-600 text-white',
       secondary: 'bg-heroHighlight hover:bg-blue-700 text-white',
       outline: 'border-2 border-heroHighlight text-heroHighlight bg-white hover:bg-heroHighlight hover:text-white'
     };
 
-    const sizeClasses: any = {
+    const sizeClasses = {
       small: 'py-2 px-4 text-sm',
       medium: 'py-3 px-6 text-base',
       large: 'py-4 px-8 text-lg sm:text-xl md:text-2xl'
     };
 
-    return `${baseClasses} ${styleClasses[button?.style!]} ${sizeClasses[button?.size!]} ${className}`;
+    return `${baseClasses} ${styleClasses[button.style]} ${sizeClasses[button.size]} ${className}`;
   };
 
   const handleButtonClick = () => {
     if (button.url) {
-      window.open(button?.url!, '_blank');
+      window.open(button.url, '_blank');
     } else if (onClick) {
       onClick();
     }
@@ -74,7 +74,7 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
         onClick={handleButtonClick}
         whileHover={{ 
           scale: 1.05, 
-          boxShadow: button?.style! === 'primary' 
+          boxShadow: button.style === 'primary' 
             ? '0 0 40px rgba(253, 126, 20, 0.6)' 
             : '0 0 40px rgba(42, 99, 255, 0.6)',
           y: -3

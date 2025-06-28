@@ -4,10 +4,10 @@ import { X, Type, Link, Save, Palette } from 'lucide-react';
 
 export interface CTAButton {
   id: string;
-  text?: string;
+  text: string;
   url?: string;
-  style?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
+  style: 'primary' | 'secondary' | 'outline';
+  size: 'small' | 'medium' | 'large';
 }
 
 interface CTAEditModalProps {
