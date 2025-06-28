@@ -74,7 +74,7 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
         onClick={handleButtonClick}
         whileHover={{ 
           scale: 1.05, 
-          boxShadow: button.style === 'primary' 
+          boxShadow: button?.style! === 'primary' 
             ? '0 0 40px rgba(253, 126, 20, 0.6)' 
             : '0 0 40px rgba(42, 99, 255, 0.6)',
           y: -3
