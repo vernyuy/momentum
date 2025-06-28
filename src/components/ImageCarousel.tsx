@@ -122,7 +122,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             )}
             
             {/* Image Caption */}
-            {images[currentIndex].caption && (
+            {images[currentIndex]?.caption! && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
