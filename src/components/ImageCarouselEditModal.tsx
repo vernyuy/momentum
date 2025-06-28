@@ -27,7 +27,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   onClose, 
   onSave, 
   images,
-  type = 'resort'
+  type = 'carousel'
 }) => {
   const [localImages, setLocalImages] = useState<any[]>(images);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -36,7 +36,6 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null);
 
   // useEffect(() => {
   //   setLocalImages(images);

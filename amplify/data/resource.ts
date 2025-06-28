@@ -3,6 +3,10 @@ const schema = a.schema({
   Timezone: a.model({
     name: a.string()
   }).authorization((allow) => [allow.publicApiKey()]),
+  Hero: a.model({
+    isActive: a.boolean(),
+    image: a.string(),
+  }).authorization((allow) => [allow.publicApiKey()]),
   RegisterButton: a.model({
     text: a.string(),
     url: a.string(),
