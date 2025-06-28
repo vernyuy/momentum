@@ -43,8 +43,8 @@ const EditableCTAButton: React.FC<EditableCTAButtonProps> = ({
   };
 
   const handleButtonClick = () => {
-    if (button.url) {
-      window.open(button.url, '_blank');
+    if (button?.url!) {
+      window.open(button?.url!, '_blank');
     } else if (onClick) {
       onClick();
     }
