@@ -107,8 +107,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             className="absolute inset-0"
           >
             <img
-              src={images[currentIndex].url}
-              alt={images[currentIndex].alt}
+              src={images[currentIndex]?.url!}
+              alt={images[currentIndex]?.alt!}
               className="w-full h-full object-cover"
               onLoad={handleImageLoad}
             />
@@ -130,7 +130,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6"
               >
                 <p className="text-white text-sm md:text-base font-medium">
-                  {images[currentIndex].caption}
+                  {images[currentIndex]?.caption!}
                 </p>
               </motion.div>
             )}

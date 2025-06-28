@@ -253,28 +253,28 @@ const HeroImageEditModal: React.FC<HeroImageEditModalProps> = ({
                       <motion.div
                         key={index}
                         className={`relative aspect-[16/9] rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
-                          imageUrl === image.url
+                          imageUrl === image?.url!
                             ? 'border-heroHighlight ring-2 ring-heroHighlight/20'
                             : 'border-gray-200 hover:border-heroHighlight/50'
                         }`}
                         onClick={() => {
-                          setImageUrl(image.url);
-                          setImagePreview(image.url);
+                          setImageUrl(image?.url!);
+                          setImagePreview(image?.url!);
                         }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <img
-                          src={image.url}
-                          alt={image.title}
+                          src={image?.url!}
+                          alt={image?.title!}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         <div className="absolute bottom-2 left-2 right-2 text-white">
-                          <p className="text-xs font-semibold">{image.title}</p>
-                          <p className="text-xs opacity-80">{image.description}</p>
+                          <p className="text-xs font-semibold">{image?.title!}</p>
+                          <p className="text-xs opacity-80">{image?.description!}</p>
                         </div>
-                        {imageUrl === image.url && (
+                        {imageUrl === image?.url! && (
                           <div className="absolute top-2 right-2 bg-heroHighlight text-white rounded-full p-1">
                             <Camera size={12} />
                           </div>

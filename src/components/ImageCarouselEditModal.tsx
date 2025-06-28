@@ -99,7 +99,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   const handleEditImage = (index: number) => {
     setEditingIndex(index);
     const image = localImages[index];
-    setEditForm({id: image.id, url: image.url, alt: image.alt, caption: image.caption || '' });
+    setEditForm({id: image?.id!, url: image?.url!, alt: image?.alt!, caption: image?.caption! || '' });
   };
 
   const handleSaveEdit = () => {
@@ -324,17 +324,17 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
                       {/* Image Preview */}
                       <div className="aspect-[4/3] rounded-lg overflow-hidden mb-3">
                         <img
-                          src={image.url}
-                          alt={image.alt}
+                          src={image?.url!}
+                          alt={image?.alt!}
                           className="w-full h-full object-cover"
                         />
                       </div>
 
                       {/* Image Info */}
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-1">{image.alt}</h4>
+                        <h4 className="font-medium text-gray-900 mb-1">{image?.alt!}</h4>
                         {image.caption && (
-                          <p className="text-sm text-gray-600">{image.caption}</p>
+                          <p className="text-sm text-gray-600">{image?.caption!}</p>
                         )}
                       </div>
                     </motion.div>
@@ -399,7 +399,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
                           {editForm.url && (
                             <div className="mt-3 aspect-[4/3] max-w-xs rounded-lg overflow-hidden">
                               <img
-                                src={editForm.url}
+                                src={editForm?.url!}
                                 alt="Preview"
                                 className="w-full h-full object-cover"
                               />
@@ -414,7 +414,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
                           </label>
                           <input
                             type="text"
-                            value={editForm.alt}
+                            value={editForm?.alt!}
                             onChange={(e) => setEditForm({ ...editForm, alt: e.target.value })}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heroHighlight focus:border-transparent"
                             placeholder="Describe the image"
