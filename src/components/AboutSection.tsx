@@ -552,6 +552,7 @@ const AboutSection: React.FC = () => {
         onClose={() => setShowImageEditModal(false)}
         onSave={handleSaveImages}
         images={localImages}
+        type='carousel'
       />
     </>
   );

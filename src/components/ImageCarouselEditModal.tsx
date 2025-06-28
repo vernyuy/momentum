@@ -27,7 +27,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   onClose, 
   onSave, 
   images,
-  type = 'carousel'
+  type
 }) => {
   const [localImages, setLocalImages] = useState<any[]>(images);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -112,7 +112,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
         createResortImage(editForm);
       if( type === 'resort') {
         createResortImage(editForm);
-      } else {
+      } else if( type === 'carousel'){
       createCarouselImage(editForm);
       }
       setLocalImages([...localImages, editForm]);
@@ -120,7 +120,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
       // Editing existing image
       if( type === 'resort') {
         updateResortImage(editForm);
-      } else {
+      } else if( type === 'carousel'){
       console.log('editForm', editForm);
       updateCarouselImage(editForm);
       }

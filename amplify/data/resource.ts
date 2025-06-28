@@ -5,8 +5,9 @@ const schema = a.schema({
   }).authorization((allow) => [allow.publicApiKey()]),
   Hero: a.model({
     isActive: a.boolean(),
-    image: a.string(),
+    imageUrl: a.string(),
   }).authorization((allow) => [allow.publicApiKey()]),
+  
   RegisterButton: a.model({
     text: a.string(),
     url: a.string(),

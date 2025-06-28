@@ -8,6 +8,7 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { getUrl } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
 
@@ -26,6 +27,22 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
     style: 'secondary',
     size: 'large'
   });
+    const getLink = (fileName: string)=>{
+      console.log("Deve",fileName)
+      if(fileName?.startsWith('https:')){
+        return fileName
+      }
+      let link = ''
+       getUrl({
+          key: fileName
+        }).then((data)=>{
+
+      console.log("Linnk", data)
+          link = data.url.toString()
+        })
+      console.log("Linnk", link)
+        return link
+    }
   const countdown = useCountdown(conferenceDate);
     useEffect(() => {
       // createTimezone({ name: 'MST' });
@@ -196,7 +213,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
         {/* Background Image - No overlay or blur */}
         <div className="absolute inset-0">
           <img
-            src={backgroundImage}
+            src={getLink(backgroundImage)}
             alt="Conference venue background"
             className="w-full h-full object-cover"
           />
