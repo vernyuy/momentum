@@ -6,6 +6,7 @@ import { X, User, Briefcase, FileText, Save, Camera, Upload, Trash2 } from 'luci
 import { Speaker } from '../data/conference';
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { getUrl, uploadData } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
 
@@ -78,16 +79,29 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
     onClose();
   };
 
-  const handleImageUpload = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setImagePreview(result);
-        setFormData({ ...formData, image: result });
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageUpload = async(file: File) => {
+    if (file) {
+          const fileName = `${Date.now()}-${file?.name}`;
+          const uploadResult = await uploadData({
+            key: fileName,
+            data: file,
+          }).result;
+          const { url } = await getUrl({
+            key: fileName
+          });
+          setImagePreview(url.toString());
+          setFormData({ ...formData, image:url.toString()});
+    
+        }
+    // if (file && file.type.startsWith('image/')) {
+    //   const reader = new FileReader();
+    //   reader.onload = (e) => {
+    //     const result = e.target?.result as string;
+    //     setImagePreview(result);
+    //     setFormData({ ...formData, image: result });
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,7 +244,7 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
                       </p>
                     </div>
 
-                    {/* Hidden File Input */}
+                    {/* Hidden File Input */}f
                     <input
                       ref={fileInputRef}
                       type="file"
