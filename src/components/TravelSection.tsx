@@ -27,30 +27,78 @@ const TravelSection: React.FC = () => {
     const [airTravel, setairTravel] = useState<Array<Schema["AirTravel"]["type"]>>([]);
     const [groundTransport, setgroundTransport] = useState<Array<Schema["GroundTransport"]["type"]>>([]);
 const [travelOptions, setTravelOptions] = useState<any[]>([])
+
+  const initialAirTravelContent = {
+    title: 'Air Travel',
+    airportName: 'Phoenix Sky Harbor International Airport (PHX)',
+    airportDescription: 'Located 20 minutes from the resort. Most convenient option with numerous daily flights.',
+    conferenceInfo: 'The annual conference will last two full days on September 19th & 20th. Please plan your flight to arrive at your leisure on Thursday, September 18th. Departures can be made at your leisure on Sunday, September 21st.',
+    tip: 'Book early for better rates. Group discounts may be available through conference organizers.'
+  };
+
+  const initialGroundTransportContent = {
+    title: 'Ground Transportation',
+    rentalCars: 'Available at Phoenix Sky Harbor. Major brands include Hertz, Avis, Enterprise, and Budget.',
+    rideServices: 'Uber and Lyft are readily available. Approximate cost from PHX: $25-40.',
+    recommendation: 'Rent a car if you plan to explore Scottsdale\'s attractions during your stay.'
+  };
+
+  const [airTravelContent, setAirTravelContent] = useState(initialAirTravelContent);
+  const [groundTransportContent, setGroundTransportContent] = useState(initialGroundTransportContent);
+
+  // Edit forms
+  const [airTravelEditForm, setAirTravelEditForm] = useState(initialAirTravelContent);
+  const [groundTransportEditForm, setGroundTransportEditForm] = useState(initialGroundTransportContent);
+
   useEffect(() => {
-    client.models.AirTravel.observeQuery().subscribe({
-      next: (data) =>{ 
-        setairTravel([...data.items])
-      setTravelOptions([ ...travelOptions, {
-        id: 'air',
-        icon: Plane,
-        title: data.items[0].title!,
-        content: data.items[0]!
-      }] )
-      },
-    });
-    client.models.GroundTransport.observeQuery().subscribe({
-      next: (data) => {
-        setgroundTransport([...data.items])
-      setTravelOptions([ ...travelOptions, {
-        id: 'ground',
-        icon: Car,
-        title: data.items[0].title!,
-        content: data.items[0]!
-      } ])
-      },
-    });
-  }, []);
+  const airTravelSub = client.models.AirTravel.observeQuery().subscribe({
+    next: (airData) => {
+      const airItems = airData.items;
+      if (airItems.length > 0) {
+        const firstAir = airItems[0];
+        setairTravel(airItems);
+        setAirTravelContent(firstAir);
+        setAirTravelEditForm(firstAir);
+        setTravelOptions((prev) => [
+          ...prev.filter((opt) => opt.id !== 'air'),
+          {
+            id: 'air',
+            icon: Plane,
+            title: firstAir.title!,
+            content: firstAir,
+          },
+        ]);
+      }
+    },
+  });
+
+  const groundTransportSub = client.models.GroundTransport.observeQuery().subscribe({
+    next: (groundData) => {
+      const groundItems = groundData.items;
+      if (groundItems.length > 0) {
+        const firstGround = groundItems[0];
+        setgroundTransport(groundItems);
+        setGroundTransportContent(firstGround);
+        setGroundTransportEditForm(firstGround);
+        setTravelOptions((prev) => [
+          ...prev.filter((opt) => opt.id !== 'ground'),
+          {
+            id: 'ground',
+            icon: Car,
+            title: firstGround.title!,
+            content: firstGround,
+          },
+        ]);
+      }
+    },
+  });
+
+  return () => {
+    airTravelSub.unsubscribe();
+    groundTransportSub.unsubscribe();
+  };
+}, []);
+
 
   function createSpeaker(speaker: any) {
     client.models.Speaker.create(speaker);
@@ -83,27 +131,6 @@ const [travelOptions, setTravelOptions] = useState<any[]>([])
   const [subHeading, setSubHeading] = useState(initialSubHeading);
 
   // Travel options content state
-  const initialAirTravelContent = {
-    title: 'Air Travel',
-    airportName: 'Phoenix Sky Harbor International Airport (PHX)',
-    airportDescription: 'Located 20 minutes from the resort. Most convenient option with numerous daily flights.',
-    conferenceInfo: 'The annual conference will last two full days on September 19th & 20th. Please plan your flight to arrive at your leisure on Thursday, September 18th. Departures can be made at your leisure on Sunday, September 21st.',
-    tip: 'Book early for better rates. Group discounts may be available through conference organizers.'
-  };
-
-  const initialGroundTransportContent = {
-    title: 'Ground Transportation',
-    rentalCars: 'Available at Phoenix Sky Harbor. Major brands include Hertz, Avis, Enterprise, and Budget.',
-    rideServices: 'Uber and Lyft are readily available. Approximate cost from PHX: $25-40.',
-    recommendation: 'Rent a car if you plan to explore Scottsdale\'s attractions during your stay.'
-  };
-
-  const [airTravelContent, setAirTravelContent] = useState(initialAirTravelContent);
-  const [groundTransportContent, setGroundTransportContent] = useState(initialGroundTransportContent);
-
-  // Edit forms
-  const [airTravelEditForm, setAirTravelEditForm] = useState(initialAirTravelContent);
-  const [groundTransportEditForm, setGroundTransportEditForm] = useState(initialGroundTransportContent);
 
   // Track if changes have been made
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
