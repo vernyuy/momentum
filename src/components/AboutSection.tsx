@@ -346,7 +346,7 @@ const AboutSection: React.FC = () => {
                 transition={{ delay: 0.8, duration: 0.8 }}
               >
                 <EditableCTAButton
-                  button={ctaButton}
+                  button={ctaButton as any}
                   onSave={handleCTASave}
                   isEditable={isCTAEditable}
                   onEditClick={handleCTAEditClick}

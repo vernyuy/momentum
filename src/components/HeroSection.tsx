@@ -20,6 +20,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
   
   const [timezone, setTimezone] = useState('MST');
   const [ctaButton, setCTAButton] = useState({
+    id: 'hero-cta',
     text: 'Register Now',
     url: '',
     style: 'secondary',
@@ -440,7 +441,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
               transition={{ delay: 1.1, duration: 0.8 }}
             >
               <EditableCTAButton
-                button={ctaButton}
+                button={ctaButton as any}
                 onSave={handleCTASave}
                 isEditable={isCTAEditable}
                 onEditClick={handleCTAEditClick}
