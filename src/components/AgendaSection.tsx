@@ -13,10 +13,60 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 const AgendaSection: React.FC = () => {
   const [agendaItems, setAgendaItems] = useState<Array<Schema["Agenda"]["type"]>>([]);
+  const [activeTab, setActiveTab] = useState<'friday' | 'saturday'>('friday');
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [showItemModal, setShowItemModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<AgendaItem | undefined>();
+  const [editingIndex, setEditingIndex] = useState<number | undefined>();
+  const [pendingAction, setPendingAction] = useState<'edit' | 'add' | null>(null);
+
+  // Local state for agenda items
+  const [localFridayAgenda, setLocalFridayAgenda] = useState(fridayAgenda);
+  const [localSaturdayAgenda, setLocalSaturdayAgenda] = useState(saturdayAgenda);
+  
+  // Track if changes have been made
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Check for changes whenever local agenda changes
+  useEffect(() => {
+    const fridayChanged = JSON.stringify(localFridayAgenda) !== JSON.stringify(fridayAgenda);
+    const saturdayChanged = JSON.stringify(localSaturdayAgenda) !== JSON.stringify(saturdayAgenda);
+    setHasUnsavedChanges(fridayChanged || saturdayChanged);
+  }, [localFridayAgenda, localSaturdayAgenda]);
+
+  const currentAgenda = activeTab === 'friday' ? agendaItems.filter(item => {
+    return item.day === 'friday';
+  }).sort((a, b) => {
+  // Parse the HH:MM string into minutes since midnight
+  const [aHours, aMinutes] = a.time.split(':').map(Number);
+  const [bHours, bMinutes] = b.time.split(':').map(Number);
+  const aTotal = aHours * 60 + aMinutes;
+  const bTotal = bHours * 60 + bMinutes;
+  return aTotal - bTotal;
+}) : agendaItems.filter(item => {
+    return item.day === 'saturday';
+  }).sort((a, b) => {
+  // Parse the HH:MM string into minutes since midnight
+  const [aHours, aMinutes] = a.time.split(':').map(Number);
+  const [bHours, bMinutes] = b.time.split(':').map(Number);
+  const aTotal = aHours * 60 + aMinutes;
+  const bTotal = bHours * 60 + bMinutes;
+  return aTotal - bTotal;
+});
 
   useEffect(() => {
     client.models.Agenda.observeQuery().subscribe({
-      next: (data) => setAgendaItems([...data.items]),
+      next: (data) => setAgendaItems([...data.items.sort((a, b) => {
+  // Parse the HH:MM string into minutes since midnight
+  const [aHours, aMinutes] = a.time.split(':').map(Number);
+  const [bHours, bMinutes] = b.time.split(':').map(Number);
+  const aTotal = aHours * 60 + aMinutes;
+  const bTotal = bHours * 60 + bMinutes;
+  return aTotal - bTotal;
+})]),
     });
   }, []);
 
@@ -40,28 +90,6 @@ const AgendaSection: React.FC = () => {
   //   await client.models.Agenda.update(agenda);
   // }
 
-  const [activeTab, setActiveTab] = useState<'friday' | 'saturday'>('friday');
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [showPinModal, setShowPinModal] = useState(false);
-  const [showItemModal, setShowItemModal] = useState(false);
-  const [editingItem, setEditingItem] = useState<AgendaItem | undefined>();
-  const [editingIndex, setEditingIndex] = useState<number | undefined>();
-  const [pendingAction, setPendingAction] = useState<'edit' | 'add' | null>(null);
-
-  // Local state for agenda items
-  const [localFridayAgenda, setLocalFridayAgenda] = useState(fridayAgenda);
-  const [localSaturdayAgenda, setLocalSaturdayAgenda] = useState(saturdayAgenda);
-  
-  // Track if changes have been made
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Check for changes whenever local agenda changes
-  useEffect(() => {
-    const fridayChanged = JSON.stringify(localFridayAgenda) !== JSON.stringify(fridayAgenda);
-    const saturdayChanged = JSON.stringify(localSaturdayAgenda) !== JSON.stringify(saturdayAgenda);
-    setHasUnsavedChanges(fridayChanged || saturdayChanged);
-  }, [localFridayAgenda, localSaturdayAgenda]);
 
   const getIcon = (type: AgendaItem['type']) => {
     switch (type) {
@@ -336,7 +364,7 @@ const AgendaSection: React.FC = () => {
             className="max-w-4xl mx-auto"
           >
             <div className="space-y-4">
-              {agendaItems.map((item:any, index: any) => (
+              {currentAgenda.map((item:any, index: any) => (
                 <motion.div
                   // key={index}
                   initial={{ opacity: 0, y: 20 }}

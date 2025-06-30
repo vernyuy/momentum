@@ -71,7 +71,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
         speaker: '',
         type: 'session',
         emoji: '',
-        timezone: 'MST'
+        // timezone: 'MST'
       });
     }
     setSelectedDate(day);
@@ -102,7 +102,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
       speaker: '',
       type: 'session',
       emoji: '',
-      timezone: 'MST'
+      // timezone: 'MST'
     });
     onClose();
   };
@@ -245,7 +245,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-2">
                       Time Zone
                     </label>
@@ -262,7 +262,7 @@ const AgendaItemModal: React.FC<AgendaItemModalProps> = ({
                         ))}
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Event Type */}
