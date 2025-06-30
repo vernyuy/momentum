@@ -9,6 +9,7 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { getUrl } from 'aws-amplify/storage';
+import RegisterModal from './RegisterModal';
 
 const client = generateClient<Schema>();
 
@@ -66,6 +67,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
   const [backgroundImage, setBackgroundImage] = useState(initialBackgroundImage);
   const [showImageEditModal, setShowImageEditModal] = useState(false);
   const [isBackgroundEditable, setIsBackgroundEditable] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+
+const handleRegisterClick = () => {
+  setIsModalOpen(true);
+};
+
+const handleModalClose = () => {
+  setIsModalOpen(false);
+};
   
   // CTA Button state
   const initialCTAButton: CTAButton = {
@@ -434,7 +445,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
             </motion.div>
 
             {/* CTA Button */}
-            <motion.div
+             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1, duration: 0.8 }}
@@ -443,10 +454,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
                 button={ctaButton as any}
                 onSave={handleCTASave}
                 isEditable={isCTAEditable}
-                onEditClick={handleCTAEditClick}
+                onEditClick={handleRegisterClick}
                 onClick={onScrollToNext}
               />
-            </motion.div>
+            </motion.div> 
           </motion.div>
         </div>
 
@@ -486,6 +497,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
         onSave={handleBackgroundSave}
         currentImage={backgroundImage}
       />
+      <RegisterModal isOpen={isModalOpen} onClose={handleModalClose} />
     </>
   );
 };

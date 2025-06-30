@@ -9,10 +9,21 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import PinModal from './PinModal';
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import RegisterModal from './RegisterModal';
 
 const client = generateClient<Schema>();
 const SpeakersSection: React.FC = () => {
   const [speakers, setSpeakers] = useState<Array<Schema["Speaker"]["type"]>>([]);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+
+  const handleRegisterClick = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
 
   useEffect(() => {
     client.models.Speaker.observeQuery().subscribe({
@@ -544,7 +555,7 @@ const SpeakersSection: React.FC = () => {
               button={ctaButton}
               onSave={handleCTASave}
               isEditable={isCTAEditable}
-              onEditClick={handleCTAEditClick}
+              onEditClick={handleRegisterClick}
             />
           </motion.div>
         </div>
@@ -577,6 +588,10 @@ const SpeakersSection: React.FC = () => {
         }}
         onSave={handleSaveSpeaker}
         speaker={editingSpeaker}
+      />
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={closeRegisterModal}
       />
     </>
   );
