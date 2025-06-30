@@ -22,15 +22,12 @@ const AgendaSection: React.FC = () => {
   const [editingIndex, setEditingIndex] = useState<number | undefined>();
   const [pendingAction, setPendingAction] = useState<'edit' | 'add' | null>(null);
 
-  // Local state for agenda items
   const [localFridayAgenda, setLocalFridayAgenda] = useState(fridayAgenda);
   const [localSaturdayAgenda, setLocalSaturdayAgenda] = useState(saturdayAgenda);
-  
-  // Track if changes have been made
+
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Check for changes whenever local agenda changes
   useEffect(() => {
     const fridayChanged = JSON.stringify(localFridayAgenda) !== JSON.stringify(fridayAgenda);
     const saturdayChanged = JSON.stringify(localSaturdayAgenda) !== JSON.stringify(saturdayAgenda);
@@ -40,33 +37,60 @@ const AgendaSection: React.FC = () => {
   const currentAgenda = activeTab === 'friday' ? agendaItems.filter(item => {
     return item.day === 'friday';
   }).sort((a, b) => {
-  // Parse the HH:MM string into minutes since midnight
-  const [aHours, aMinutes] = a.time.split(':').map(Number);
-  const [bHours, bMinutes] = b.time.split(':').map(Number);
-  const aTotal = aHours * 60 + aMinutes;
-  const bTotal = bHours * 60 + bMinutes;
-  return aTotal - bTotal;
-}) : agendaItems.filter(item => {
+    function parseTime(t) {
+      const [timePart, meridian] = t.split(' ');
+      let [hours, minutes] = timePart.split(':').map(Number);
+      if (meridian === "PM" && hours !== 12) {
+        hours += 12;
+      }
+      if (meridian === "AM" && hours === 12) {
+        hours = 0;
+      }
+      return hours * 60 + minutes;
+    }
+
+    const aTotal = parseTime(a.time);
+    const bTotal = parseTime(b.time);
+    return aTotal - bTotal;
+  }) : agendaItems.filter(item => {
     return item.day === 'saturday';
   }).sort((a, b) => {
-  // Parse the HH:MM string into minutes since midnight
-  const [aHours, aMinutes] = a.time.split(':').map(Number);
-  const [bHours, bMinutes] = b.time.split(':').map(Number);
-  const aTotal = aHours * 60 + aMinutes;
-  const bTotal = bHours * 60 + bMinutes;
-  return aTotal - bTotal;
-});
+    function parseTime(t) {
+      const [timePart, meridian] = t.split(' ');
+      let [hours, minutes] = timePart.split(':').map(Number);
+      if (meridian === "PM" && hours !== 12) {
+        hours += 12;
+      }
+      if (meridian === "AM" && hours === 12) {
+        hours = 0;
+      }
+      return hours * 60 + minutes;
+    }
+
+    const aTotal = parseTime(a.time);
+    const bTotal = parseTime(b.time);
+    return aTotal - bTotal;
+  });
 
   useEffect(() => {
     client.models.Agenda.observeQuery().subscribe({
       next: (data) => setAgendaItems([...data.items.sort((a, b) => {
-  // Parse the HH:MM string into minutes since midnight
-  const [aHours, aMinutes] = a.time.split(':').map(Number);
-  const [bHours, bMinutes] = b.time.split(':').map(Number);
-  const aTotal = aHours * 60 + aMinutes;
-  const bTotal = bHours * 60 + bMinutes;
-  return aTotal - bTotal;
-})]),
+        function parseTime(t) {
+          const [timePart, meridian] = t.split(' ');
+          let [hours, minutes] = timePart.split(':').map(Number);
+          if (meridian === "PM" && hours !== 12) {
+            hours += 12;
+          }
+          if (meridian === "AM" && hours === 12) {
+            hours = 0;
+          }
+          return hours * 60 + minutes;
+        }
+
+        const aTotal = parseTime(a.time);
+        const bTotal = parseTime(b.time);
+        return aTotal - bTotal;
+      })]),
     });
   }, []);
 
@@ -151,25 +175,25 @@ const AgendaSection: React.FC = () => {
     if (originalIndex !== undefined) {
       // Editing existing item
       if (activeTab === 'friday') {
-        setLocalFridayAgenda(prev => prev.map((existingItem, i) => 
+        setLocalFridayAgenda(prev => prev.map((existingItem, i) =>
           i === originalIndex ? itemWithoutDay : existingItem
         ));
       } else {
-        setLocalSaturdayAgenda(prev => prev.map((existingItem, i) => 
+        setLocalSaturdayAgenda(prev => prev.map((existingItem, i) =>
           i === originalIndex ? itemWithoutDay : existingItem
         ));
       }
     } else {
       // Adding new item
       if (targetDay === 'friday') {
-        createAgendaItem({...itemWithoutDay, day: 'friday'});
+        createAgendaItem({ ...itemWithoutDay, day: 'friday' });
         setLocalFridayAgenda(prev => [...prev, itemWithoutDay].sort((a, b) => {
           const timeA = a.time.replace(/[^\d:]/g, '');
           const timeB = b.time.replace(/[^\d:]/g, '');
           return timeA.localeCompare(timeB);
         }));
       } else {
-        createAgendaItem({...itemWithoutDay, day: 'saturday'});
+        createAgendaItem({ ...itemWithoutDay, day: 'saturday' });
         setLocalSaturdayAgenda(prev => [...prev, itemWithoutDay].sort((a, b) => {
           const timeA = a.time.replace(/[^\d:]/g, '');
           const timeB = b.time.replace(/[^\d:]/g, '');
@@ -181,25 +205,25 @@ const AgendaSection: React.FC = () => {
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    
+
     // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     // In a real app, you would save to your backend here
     console.log('Saving agenda changes:', {
       friday: localFridayAgenda,
       saturday: localSaturdayAgenda
     });
-    
+
     setIsSaving(false);
     setHasUnsavedChanges(false);
-    
+
     // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Agenda saved successfully!';
     document.body.appendChild(successMessage);
-    
+
     setTimeout(() => {
       document.body.removeChild(successMessage);
     }, 3000);
@@ -213,14 +237,14 @@ const AgendaSection: React.FC = () => {
 
   const formatTime = (time: string, timezone?: string) => {
     if (!time) return time;
-    
+
     // Convert 24-hour format to 12-hour format
     const [hours, minutes] = time.split(':');
     const hour = parseInt(hours, 10);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
     const formattedTime = `${displayHour}:${minutes} ${ampm}`;
-    
+
     return timezone ? `${formattedTime} ${timezone}` : formattedTime;
   };
 
@@ -242,11 +266,10 @@ const AgendaSection: React.FC = () => {
               <div className="flex gap-2">
                 <motion.button
                   onClick={handleEditClick}
-                  className={`p-3 rounded-full transition-all duration-300 ${
-                    isEditMode 
-                      ? 'bg-success text-white shadow-lg' 
+                  className={`p-3 rounded-full transition-all duration-300 ${isEditMode
+                      ? 'bg-success text-white shadow-lg'
                       : 'bg-white/80 text-gray-600 hover:bg-white hover:text-heroHighlight'
-                  }`}
+                    }`}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   title={isEditMode ? 'Exit Edit Mode' : 'Edit Agenda'}
@@ -285,7 +308,7 @@ const AgendaSection: React.FC = () => {
                       You have unsaved changes
                     </p>
                   </div>
-                  
+
                   <div className="flex gap-3">
                     <motion.button
                       onClick={handleResetChanges}
@@ -296,7 +319,7 @@ const AgendaSection: React.FC = () => {
                       <RotateCcw size={16} />
                       Reset
                     </motion.button>
-                    
+
                     <motion.button
                       onClick={handleSaveChanges}
                       disabled={isSaving}
@@ -337,11 +360,10 @@ const AgendaSection: React.FC = () => {
                   <motion.button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
-                    className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                      activeTab === tab.key
+                    className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${activeTab === tab.key
                         ? 'bg-heroHighlight text-white shadow-lg'
                         : 'text-gray-600 hover:text-heroHighlight'
-                    }`}
+                      }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -364,15 +386,14 @@ const AgendaSection: React.FC = () => {
             className="max-w-4xl mx-auto"
           >
             <div className="space-y-4">
-              {currentAgenda.map((item:any, index: any) => (
+              {currentAgenda.map((item: any, index: any) => (
                 <motion.div
                   // key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
-                  className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow relative group ${
-                    item.type === 'party' ? 'ring-2 ring-ctaOrange/20 bg-gradient-to-r from-orange-50 to-yellow-50' : ''
-                  }`}
+                  className={`bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow relative group ${item.type === 'party' ? 'ring-2 ring-ctaOrange/20 bg-gradient-to-r from-orange-50 to-yellow-50' : ''
+                    }`}
                 >
                   {/* Edit Controls */}
                   {isEditMode && (
@@ -410,11 +431,10 @@ const AgendaSection: React.FC = () => {
                         {formatTime(item.time, (item as any).timezone)}
                       </span>
                     </div>
-                    
+
                     <div className="flex-1">
-                      <h3 className={`font-bold text-lg mb-1 flex items-center gap-2 ${
-                        item.type === 'party' ? 'text-ctaOrange' : 'text-textDark'
-                      }`}>
+                      <h3 className={`font-bold text-lg mb-1 flex items-center gap-2 ${item.type === 'party' ? 'text-ctaOrange' : 'text-textDark'
+                        }`}>
                         {(item as any).emoji && (
                           <span className="text-xl">{(item as any).emoji}</span>
                         )}
