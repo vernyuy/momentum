@@ -157,8 +157,9 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
         const { url } = await getUrl({
               key: fileName
             });
-        // imageUrl = `https://amplify-amplifyvitereactt-momentumstoragebucket569-f2ydx7csbjip.s3.amazonaws.com/public/${uploadResult.key}`;
-        setEditForm({ ...editForm, url: url.toString() });
+        imageUrl = `https://amplify-amplifyvitereactt-momentumstoragebucket569-f2ydx7csbjip.s3.amazonaws.com/public/${uploadResult.key.replace(' ', '+')}`;
+        console.log(imageUrl)
+        setEditForm({ ...editForm, url: imageUrl });
 
       }
     // if (file && file.type.startsWith('image/')) {
