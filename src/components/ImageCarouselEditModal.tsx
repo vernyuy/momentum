@@ -157,7 +157,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
         const { url } = await getUrl({
               key: fileName
             });
-        imageUrl = `https://amplify-amplifyvitereactt-momentumstoragebucket569-zj8tzldtlmb3.s3.amazonaws.com/public/${uploadResult.key.replace(' ', '+')}`;
+        imageUrl = `https://amplify-d2lj6r12cbff8k-ma-momentumstoragebucket569-zj8tzldtlmb3.s3.amazonaws.com/public/${uploadResult.key.replace(' ', '+')}`;
         console.log(imageUrl)
         setEditForm({ ...editForm, url: imageUrl });
 
