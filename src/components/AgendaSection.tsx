@@ -27,6 +27,7 @@ const AgendaSection: React.FC = () => {
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [timezone, setTimezone] = useState('MST');
 
   useEffect(() => {
     const fridayChanged = JSON.stringify(localFridayAgenda) !== JSON.stringify(fridayAgenda);
@@ -73,6 +74,19 @@ const AgendaSection: React.FC = () => {
   });
 
   useEffect(() => {
+    const fetchTimezones = async () => {
+        try {
+          client.models.Timezone.observeQuery().subscribe({
+            next: (data)=>{
+              const ress = data.items.filter(item => item.id === '24f381e3-fdcb-48c6-852e-028eb2a47851')[0]
+              setTimezone(ress!.name!);
+            }
+          })
+        } catch (error) {
+          console.error('Error fetching timezones:', error);
+        }
+      }
+      fetchTimezones();
     client.models.Agenda.observeQuery().subscribe({
       next: (data) => setAgendaItems([...data.items.sort((a, b) => {
         function parseTime(t) {
@@ -245,7 +259,7 @@ const AgendaSection: React.FC = () => {
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
     const formattedTime = `${displayHour}:${minutes} ${ampm}`;
 
-    return timezone ? `${formattedTime} ${timezone}` : formattedTime;
+    return timezone ? `${formattedTime}` : formattedTime;
   };
 
   return (
@@ -428,7 +442,7 @@ const AgendaSection: React.FC = () => {
                     <div className="flex items-center gap-3 sm:w-40">
                       {getIcon(item.type)}
                       <span className="font-bold text-textDark text-lg">
-                        {formatTime(item.time, (item as any).timezone)}
+                        {formatTime(item.time, timezone)} {timezone}
                       </span>
                     </div>
 

@@ -34,7 +34,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
       // createButton();
       client.models.RegisterButton.observeQuery().subscribe({
         next: (data: any) =>{ 
-          console.log('Timezone data:', data.items);
+          console.log('Button Hero:', data.items);
           setCTAButton(data.items[0]);
       }});
       const fetchTimezones = async () => {
@@ -42,6 +42,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
           const timezones = await client.models.Timezone.get({
             id: "24f381e3-fdcb-48c6-852e-028eb2a47851",
           })
+          console.log('Timezone:', timezones.data);
           setTimezone(timezones!.data!.name!);
         } catch (error) {
           console.error('Error fetching timezones:', error);
@@ -49,20 +50,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
       }
       fetchTimezones();
     }, []);
-  // function createTimezone(data: { name: string }) {
-  //     client.models.Timezone.create(data);
-  //   }
-  //   function createButton(data?: any) {
-  //     client.models.RegisterButton.create({
-  //       id: 'hero-cta',
-  //   text: 'Register Now',
-  //   url: '',
-  //   style: 'secondary',
-  //   size: 'large'
-  // });
-    // }
-    function updateTimezone(data: any) {
-      client.models.Timezone.update(data);
+    async function updateTimezone(data: any) {
+      const res = await client.models.Timezone.update(data);
     }
     function updateButton(data: any) {
       client.models.RegisterButton.update(data);
