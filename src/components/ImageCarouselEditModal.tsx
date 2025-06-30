@@ -160,7 +160,7 @@ const [isSaved, setIsSaved] = useState(false)
               key: fileName
             });
         imageUrl = `https://amplify-d2lj6r12cbff8k-ma-momentumstoragebucket569-zj8tzldtlmb3.s3.amazonaws.com/public/${uploadResult.key.replace(' ', '+')}`;
-        console.log(imageUrl)
+        
         setEditForm({ ...editForm, url: imageUrl });
 
       }
@@ -467,7 +467,7 @@ const [isSaved, setIsSaved] = useState(false)
                           </button>
                           <motion.button
                             type="button"
-                            onClick={handleSaveEdit}
+                            onClick={()=>handleSaveEdit}
                             disabled={!editForm.url || !editForm.alt}
                             className="px-4 py-2 bg-heroHighlight hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             whileHover={{ scale: 1.02 }}
