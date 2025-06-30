@@ -29,6 +29,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
     size: 'large'
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+
+const handleRegisterClick = () => {
+  setIsModalOpen(true);
+};
+
+const handleModalClose = () => {
+  setIsModalOpen(false);
+};
+
   const countdown = useCountdown(conferenceDate);
     useEffect(() => {
       // createTimezone({ name: 'MST' });
@@ -67,16 +78,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToNext }: any) => {
   const [backgroundImage, setBackgroundImage] = useState(initialBackgroundImage);
   const [showImageEditModal, setShowImageEditModal] = useState(false);
   const [isBackgroundEditable, setIsBackgroundEditable] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   
-
-const handleRegisterClick = () => {
-  setIsModalOpen(true);
-};
-
-const handleModalClose = () => {
-  setIsModalOpen(false);
-};
   
   // CTA Button state
   const initialCTAButton: CTAButton = {
