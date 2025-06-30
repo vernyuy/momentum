@@ -103,8 +103,9 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     const image = localImages[index];
     setEditForm({url: image?.url!, alt: image?.alt!, caption: image?.caption! || '' });
   };
-
-  const handleSaveEdit = () => {
+const [isSaved, setIsSaved] = useState(false)
+  const handleSaveEdit = (isSaved?: boolean) => {
+    if(isSaved) return
     console.log('handleSaveEdit', editForm);
     if (editingIndex === -1) {
       // Adding new image
@@ -128,6 +129,7 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
       updated[editingIndex] = editForm;
       setLocalImages(updated);
     }
+    setIsSaved(true)
     setEditingIndex(null);
     setEditForm({url: '', alt: '', caption: '' });
   };
@@ -497,7 +499,10 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
                     Cancel
                   </button>
                   <motion.button
-                    onClick={handleSubmit}
+                    onClick={()=>{
+                      handleSaveEdit(isSaved)
+                      handleSubmit
+                    }}
                     className="flex-1 bg-success hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
