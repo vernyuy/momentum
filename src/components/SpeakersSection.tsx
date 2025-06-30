@@ -16,7 +16,10 @@ const SpeakersSection: React.FC = () => {
 
   useEffect(() => {
     client.models.Speaker.observeQuery().subscribe({
-      next: (data) => setSpeakers([...data.items]),
+      next: (data) => {
+        const sortedItems = [...data.items].sort((a, b) => a.position - b.position);
+        setSpeakers(sortedItems);
+      },
     });
   }, []);
 
@@ -165,42 +168,113 @@ const SpeakersSection: React.FC = () => {
   };
 
   // Drag and Drop handlers
+  // const handleDragStart = (e: React.DragEvent, speaker: Speaker) => {
+  //   console.log("drag start", e)
+  //   setDraggedSpeaker(speaker);
+  //   e.dataTransfer.effectAllowed = 'move';
+  // };
+
+  // const handleDragOver = (e: React.DragEvent, index: number) => {
+  //   console.log("drag over", e)
+  //   e.preventDefault();
+  //   e.dataTransfer.dropEffect = 'move';
+  //   setDragOverIndex(index);
+  // };
+
+  // const handleDragLeave = () => {
+  //   console.log("drag leave")
+  //   setDragOverIndex(null);
+  // };
+
+  // const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  //   console.log("drag drop")
+  //   e.preventDefault();
+
+  //   if (!draggedSpeaker) return;
+
+  //   const dragIndex = localSpeakers.findIndex(s => s.id === draggedSpeaker.id);
+  //   if (dragIndex === dropIndex) return;
+
+  //   const newSpeakers = [...localSpeakers];
+  //   const [removed] = newSpeakers.splice(dragIndex, 1);
+  //   newSpeakers.splice(dropIndex, 0, removed);
+
+  //   setLocalSpeakers(newSpeakers);
+  //   setDraggedSpeaker(null);
+  //   setDragOverIndex(null);
+  // };
+
+  // const handleDragEnd = () => {
+  //   console.log("drag end")
+  //   setDraggedSpeaker(null);
+  //   setDragOverIndex(null);
+  // };
+
+  // Start dragging
   const handleDragStart = (e: React.DragEvent, speaker: Speaker) => {
     setDraggedSpeaker(speaker);
     e.dataTransfer.effectAllowed = 'move';
   };
 
+  // Over another item
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
   };
 
+  // Leaving item
   const handleDragLeave = () => {
     setDragOverIndex(null);
   };
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  // Dropping
+  const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
 
     if (!draggedSpeaker) return;
 
-    const dragIndex = localSpeakers.findIndex(s => s.id === draggedSpeaker.id);
+    const dragIndex = speakers.findIndex(s => s.id === draggedSpeaker.id);
     if (dragIndex === dropIndex) return;
 
-    const newSpeakers = [...localSpeakers];
-    const [removed] = newSpeakers.splice(dragIndex, 1);
-    newSpeakers.splice(dropIndex, 0, removed);
+    // Reorder locally
+    const newSpeakers = [...speakers];
+    const [movedItem] = newSpeakers.splice(dragIndex, 1);
+    newSpeakers.splice(dropIndex, 0, movedItem);
 
-    setLocalSpeakers(newSpeakers);
+    // Update positions in the array (so they stay sequential)
+    const updatedSpeakers = newSpeakers.map((speaker, index) => ({
+      ...speaker,
+      position: index + 1, // or start from 0 if you prefer
+    }));
+
+    setSpeakers(updatedSpeakers as any);
     setDraggedSpeaker(null);
     setDragOverIndex(null);
+
+    // Persist to backend
+    try {
+      // Make API calls for each updated item
+      // await Promise.all(
+      updatedSpeakers.map(async (speaker) => {
+        const res = await client.models.Speaker.update(speaker as any)
+        console.log("position", res)
+      })
+      // )
+
+      console.log('Positions updated successfully.');
+    } catch (error) {
+      console.error('Failed to update positions:', error);
+      // Optionally, revert local state or show an error
+    }
   };
 
+  // Drag end
   const handleDragEnd = () => {
     setDraggedSpeaker(null);
     setDragOverIndex(null);
   };
+
 
   return (
     <>
@@ -221,8 +295,8 @@ const SpeakersSection: React.FC = () => {
                 <motion.button
                   onClick={handleEditClick}
                   className={`p-3 rounded-full transition-all duration-300 ${isEditMode
-                      ? 'bg-success text-white shadow-lg'
-                      : 'bg-white/80 text-gray-600 hover:bg-white hover:text-heroHighlight'
+                    ? 'bg-success text-white shadow-lg'
+                    : 'bg-white/80 text-gray-600 hover:bg-white hover:text-heroHighlight'
                     }`}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -337,7 +411,7 @@ const SpeakersSection: React.FC = () => {
                   } ${draggedSpeaker?.id === speaker.id ? 'opacity-50 scale-95' : ''
                   }`}
                 draggable={isEditMode}
-                onDragStart={(e:any) => handleDragStart(e, speaker)}
+                onDragStart={(e: any) => handleDragStart(e, speaker)}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, index)}

@@ -7,7 +7,7 @@ const schema = a.schema({
     isActive: a.boolean(),
     imageUrl: a.string(),
   }).authorization((allow) => [allow.publicApiKey()]),
-  
+
   RegisterButton: a.model({
     text: a.string(),
     url: a.string(),
@@ -34,7 +34,8 @@ const schema = a.schema({
     title: a.string(),
     bio: a.string(),
     fullBio: a.string(),
-    image: a.string()
+    image: a.string(),
+    position: a.integer()
   }).authorization((allow) => [allow.publicApiKey()]),
     Agenda: a.model({
       day: a.string(),
