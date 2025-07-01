@@ -353,6 +353,7 @@ const AboutSection: React.FC = () => {
                 />
               </motion.div>
 
+
               {/* Save/Reset Controls */}
               <AnimatePresence>
                 {hasUnsavedChanges && isEditMode && (
