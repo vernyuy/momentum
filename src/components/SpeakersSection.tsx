@@ -300,7 +300,7 @@ const SpeakersSection: React.FC = () => {
           >
             <div className="flex items-center justify-center gap-4 mb-4">
               <h2 className="text-3xl md:text-5xl font-extrabold text-textDark">
-                Momentum 2025! Speakers
+                Momentum 2025! Speakers & Faculty
               </h2>
               <div className="flex gap-2">
                 <motion.button
