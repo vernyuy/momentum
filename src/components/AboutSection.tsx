@@ -57,6 +57,7 @@ const AboutSection: React.FC = () => {
       // unsubscribe from the query when the component unmounts
       
     }, []);
+    
   // function createMomentum(data?: any) {
   //     client.models.Momentum.create({
   //       mainHeading: initialMainHeading,
