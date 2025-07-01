@@ -237,6 +237,12 @@ const [isSaved, setIsSaved] = useState(false)
     setDragOverIndex(null);
   };
 
+  const handleSaveAll = () => {
+  handleSaveEdit(false); 
+  onSave(localImages);   
+  onClose();             
+};
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -499,10 +505,7 @@ const [isSaved, setIsSaved] = useState(false)
                     Cancel
                   </button>
                   <motion.button
-                    onClick={()=>{
-                      handleSaveEdit(isSaved)
-                      handleSubmit
-                    }}
+                    onClick={handleSaveAll}
                     className="flex-1 bg-success hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
