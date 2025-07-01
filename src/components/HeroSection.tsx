@@ -479,6 +479,8 @@ const handleModalClose = () => {
             <ChevronDown size={28} />
           </motion.div>
         </motion.button>
+
+        <RegisterModal isOpen={isModalOpen} onClose={handleModalClose} />
       </section>
 
       {/* PIN Modal */}
@@ -499,7 +501,7 @@ const handleModalClose = () => {
         onSave={handleBackgroundSave}
         currentImage={backgroundImage}
       />
-      <RegisterModal isOpen={isModalOpen} onClose={handleModalClose} />
+      
     </>
   );
 };

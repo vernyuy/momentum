@@ -559,6 +559,10 @@ const SpeakersSection: React.FC = () => {
             />
           </motion.div>
         </div>
+        <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={closeRegisterModal}
+      />
       </section>
 
       {/* Speaker Detail Modal */}
@@ -589,10 +593,7 @@ const SpeakersSection: React.FC = () => {
         onSave={handleSaveSpeaker}
         speaker={editingSpeaker}
       />
-      <RegisterModal
-        isOpen={isRegisterModalOpen}
-        onClose={closeRegisterModal}
-      />
+      
     </>
   );
 };
