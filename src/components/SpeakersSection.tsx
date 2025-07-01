@@ -555,7 +555,8 @@ const SpeakersSection: React.FC = () => {
               button={ctaButton}
               onSave={handleCTASave}
               isEditable={isCTAEditable}
-              onEditClick={handleRegisterClick}
+              onClick={handleRegisterClick}
+              onEditClick={handleCTAEditClick}
             />
           </motion.div>
         </div>

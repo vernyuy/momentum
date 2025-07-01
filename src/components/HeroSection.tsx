@@ -10,6 +10,7 @@ import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { getUrl } from 'aws-amplify/storage';
 import RegisterModal from './RegisterModal';
+import { Button } from '@headlessui/react';
 
 const client = generateClient<Schema>();
 
@@ -456,8 +457,8 @@ const handleModalClose = () => {
                 button={ctaButton as any}
                 onSave={handleCTASave}
                 isEditable={isCTAEditable}
-                onEditClick={handleRegisterClick}
-                onClick={onScrollToNext}
+                onEditClick={handleCTAEditClick}
+                onClick={handleRegisterClick}
               />
             </motion.div> 
           </motion.div>
