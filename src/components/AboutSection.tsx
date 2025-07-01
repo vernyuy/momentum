@@ -10,6 +10,7 @@ import EditableCTAButton, { CTAButton } from './EditableCTAButton';
 import PinModal from './PinModal';
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import RegisterModal from './RegisterModal';
 
 const client = generateClient<Schema>();
 
@@ -28,6 +29,7 @@ const AboutSection: React.FC = () => {
   const [mainHeading, setMainHeading] = useState(initialMainHeading);
   const [subHeading, setSubHeading] = useState(initialSubHeading);
   const [description, setDescription] = useState(initialDescription);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [id, setId] = useState('about-section');  
 
     const [ctaButton, setCTAButton] = useState({
@@ -37,6 +39,14 @@ const AboutSection: React.FC = () => {
       style: 'secondary',
       size: 'large'
     });
+
+      const handleRegisterClick = () => {
+        setIsRegisterModalOpen(true);
+      };
+    
+      const closeRegisterModal = () => {
+        setIsRegisterModalOpen(false);
+      };
     useEffect(() => {
       // createMomentum();
       client.models.RegisterButton.observeQuery().subscribe({
@@ -57,7 +67,7 @@ const AboutSection: React.FC = () => {
       // unsubscribe from the query when the component unmounts
       
     }, []);
-    
+
   // function createMomentum(data?: any) {
   //     client.models.Momentum.create({
   //       mainHeading: initialMainHeading,
@@ -351,6 +361,7 @@ const AboutSection: React.FC = () => {
                   onSave={handleCTASave}
                   isEditable={isCTAEditable}
                   onEditClick={handleCTAEditClick}
+                  onClick={handleRegisterClick}
                 />
               </motion.div>
 
@@ -428,6 +439,10 @@ const AboutSection: React.FC = () => {
             </motion.div>
           </div>
         </div>
+        <RegisterModal
+          isOpen={isRegisterModalOpen}
+          onClose={closeRegisterModal}
+        />
       </section>
 
       {/* Content Edit Modal */}
