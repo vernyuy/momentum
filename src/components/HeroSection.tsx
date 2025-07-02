@@ -75,7 +75,7 @@ const handleModalClose = () => {
   const [pendingAction, setPendingAction] = useState<'timezone' | 'background' | 'cta' | null>(null);
   
   // Background image state
-  const initialBackgroundImage = 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop';
+  const initialBackgroundImage = 'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop';
   const [backgroundImage, setBackgroundImage] = useState(initialBackgroundImage);
   const [showImageEditModal, setShowImageEditModal] = useState(false);
   const [isBackgroundEditable, setIsBackgroundEditable] = useState(false);

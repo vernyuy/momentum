@@ -73,11 +73,12 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
     function updateResortImage(data: any) {
       client.models.ResortImages.update(data);
     }
-    function deleteCarouselImage(id: any) {
-      client.models.CarouselImage.delete(id);
+    async function deleteCarouselImage(id: any) {
+      const res = await client.models.CarouselImage.delete({id});
+      console.log(res)
     }
     function deleteResortImage(id: any) {
-      client.models.ResortImages.delete(id);
+      client.models.ResortImages.delete({id});
     }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -105,7 +106,10 @@ const ImageCarouselEditModal: React.FC<ImageCarouselEditModalProps> = ({
   };
 const [isSaved, setIsSaved] = useState(false)
   const handleSaveEdit = (isSaved?: boolean) => {
-    if(isSaved) return
+    if(isSaved) {
+    setEditingIndex(null);
+      return
+    }
     console.log('handleSaveEdit', editForm);
     if (editingIndex === -1) {
       // Adding new image
@@ -140,12 +144,15 @@ const [isSaved, setIsSaved] = useState(false)
   };
 
   const handleDeleteImage = (index: number) => {
+    console.log('handleDeleteImage', localImages[index]);
     if (type === 'resort') {
       deleteResortImage(localImages[index].id);
     } else {
+      console.log('deleteCarouselImage', localImages[index].id);  
       deleteCarouselImage(localImages[index].id);
     }
     setLocalImages(localImages.filter((_, i) => i !== index));
+    setIsSaved(true)
   };
 
   const handleImageUpload = async (file: File) => {
@@ -236,12 +243,6 @@ const [isSaved, setIsSaved] = useState(false)
     setDraggedIndex(null);
     setDragOverIndex(null);
   };
-
-  const handleSaveAll = () => {
-  handleSaveEdit(false); 
-  onSave(localImages);   
-  onClose();             
-};
 
   return (
     <AnimatePresence>
@@ -505,7 +506,11 @@ const [isSaved, setIsSaved] = useState(false)
                     Cancel
                   </button>
                   <motion.button
-                    onClick={handleSaveAll}
+                    onClick={()=>{
+                      handleSaveEdit(isSaved)
+                      handleSubmit
+                      handleClose
+                    }}
                     className="flex-1 bg-success hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
