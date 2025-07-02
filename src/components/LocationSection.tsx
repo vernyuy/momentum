@@ -63,11 +63,8 @@ const LocationSection: React.FC = () => {
   const [ctaButton1, setCTAButton1] = useState(initialCTAButton1);
   const [ctaButton2, setCTAButton2] = useState(initialCTAButton2);
   useEffect(() => {
-    // createHotel();
-    // createNotice()
     client.models.RegisterButton.observeQuery().subscribe({
       next: (data: any) => {
-        console.log('Timezone data:', data.items);
         setCTAButton1(data.items[2]);
         setCTAButton2(data.items[3]);
       }
@@ -75,40 +72,15 @@ const LocationSection: React.FC = () => {
     client.models.Hotel.observeQuery().subscribe({
       next: (data: any) => {
         setHotelInfo(data.items[0]);
-        console.log('Why Attend data:', data.items);
       }
     });
     client.models.Notice.observeQuery().subscribe({
       next: (data: any) => {
         setNoticeText(data.items[0].content);
         setNoticeId(data.items[0].id);
-        console.log('Why Attend data:', data.items);
       }
     });
   }, [hotelInfo]);
-  // async function createHotel(data?: any) {
-  //   const res = await client.models.Hotel.create({
-  //     name: 'The Westin Kierland Resort & Spa',
-  //     address: '6902 E Greenway Pkwy\nScottsdale, AZ 85254',
-  //     phone: '(480) 991-4000'
-  //   });
-  //   console.log('Created Why Attend item:', res);
-  // }
-  // async function createNotice(data?: any) {
-  //   const res = await client.models.Notice.create({
-  //     content: 'Hotel room block closes on August 19, 2025. Reserve your room early to secure conference rates!'
-  //   });
-  //   console.log('Created Why Attend item:', res);
-  // }
-
-  // async function createResort(data?: any) {
-  //   const res = await client.models.ResortImages.create({
-  //     url: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
-  //     alt: 'Westin Kierland Resort exterior',
-  //     caption: 'Beautiful resort exterior with desert landscape'
-  //   });
-  //   console.log('Created resort item:', res);
-  // }
 
   function updateHotel(data: any) {
     client.models.Hotel.update(data);
@@ -121,9 +93,6 @@ const LocationSection: React.FC = () => {
     client.models.RegisterButton.update(data);
   }
 
-  // Notice text state
-
-  // Resort images state
   const initialResortImages: CarouselImage[] = [
     {
       url: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
@@ -152,7 +121,6 @@ const LocationSection: React.FC = () => {
     client.models.ResortImages.observeQuery().subscribe({
       next: (data: any) => {
         setResortImages(data.items);
-        console.log('resort data:', data.items);
       }
     });
   }, [hotelInfo]);
@@ -160,11 +128,9 @@ const LocationSection: React.FC = () => {
   const [isCTA1Editable, setIsCTA1Editable] = useState(false);
   const [isCTA2Editable, setIsCTA2Editable] = useState(false);
 
-  // Track if changes have been made
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Check for changes whenever any content changes
   useEffect(() => {
     const headingChanged = sectionHeading !== initialHeading;
     const hotelChanged = JSON.stringify(hotelInfo) !== JSON.stringify(initialHotelInfo);
@@ -266,24 +232,10 @@ const LocationSection: React.FC = () => {
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-
-    // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real app, you would save to your backend here
-    console.log('Saving location section changes:', {
-      sectionHeading,
-      hotelInfo,
-      noticeText,
-      resortImages,
-      ctaButton1,
-      ctaButton2
-    });
-
     setIsSaving(false);
     setHasUnsavedChanges(false);
 
-    // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Location section saved successfully!';

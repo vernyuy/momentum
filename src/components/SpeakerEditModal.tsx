@@ -86,25 +86,15 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
             key: fileName,
             data: file,
           }).result;
-          console.log("Uploa", uploadResult)
           const { url } = await getUrl({
             key: fileName
           });
           const temp = `https://amplify-d2lj6r12cbff8k-ma-momentumstoragebucket569-zj8tzldtlmb3.s3.us-east-1.amazonaws.com/public/${uploadResult.key.replace(/ /g, '+')}`
-          console.log("Uploa", temp)
+          
           setImagePreview(url.toString());
           setFormData({ ...formData, image: temp});
     
         }
-    // if (file && file.type.startsWith('image/')) {
-    //   const reader = new FileReader();
-    //   reader.onload = (e) => {
-    //     const result = e.target?.result as string;
-    //     setImagePreview(result);
-    //     setFormData({ ...formData, image: result });
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,7 +140,6 @@ const SpeakerEditModal: React.FC<SpeakerEditModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

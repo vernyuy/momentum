@@ -38,7 +38,6 @@ const SpeakersSection: React.FC = () => {
     client.models.Speaker.create(speaker);
   }
   async function deleteSpeaker(speakerId: string) {
-    console.log("Deleting speaker with ID:", speakerId);
     await client.models.Speaker.delete({
       id: speakerId
     });
@@ -111,7 +110,6 @@ const SpeakersSection: React.FC = () => {
   };
 
   const handleAddClick = () => {
-    console.log("speakers", speakers);
     setPendingAction('add');
     setEditingSpeaker(undefined);
     setShowPinModal(true);
@@ -123,7 +121,6 @@ const SpeakersSection: React.FC = () => {
   };
 
   const handleEditSpeaker = (speaker: Speaker) => {
-    console.log("Editing speaker:", speaker);
     setEditingSpeaker(speaker);
     setShowEditModal(true);
   };
@@ -134,7 +131,6 @@ const SpeakersSection: React.FC = () => {
   };
 
   const handleSaveSpeaker = (speaker: Speaker, originalId?: boolean) => {
-    console.log("Saving speaker:", speaker, "Original ID:", originalId);
     if (!originalId) {
       updateSpeaker(speaker);
     } else {
@@ -149,19 +145,10 @@ const SpeakersSection: React.FC = () => {
   const handleSaveChanges = async () => {
     setIsSaving(true);
 
-    // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real app, you would save to your backend here
-    console.log('Saving speaker changes:', {
-      speakers: localSpeakers,
-      ctaButton
-    });
-
     setIsSaving(false);
     setHasUnsavedChanges(false);
 
-    // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Speakers saved successfully!';
@@ -178,68 +165,21 @@ const SpeakersSection: React.FC = () => {
     setHasUnsavedChanges(false);
   };
 
-  // Drag and Drop handlers
-  // const handleDragStart = (e: React.DragEvent, speaker: Speaker) => {
-  //   console.log("drag start", e)
-  //   setDraggedSpeaker(speaker);
-  //   e.dataTransfer.effectAllowed = 'move';
-  // };
-
-  // const handleDragOver = (e: React.DragEvent, index: number) => {
-  //   console.log("drag over", e)
-  //   e.preventDefault();
-  //   e.dataTransfer.dropEffect = 'move';
-  //   setDragOverIndex(index);
-  // };
-
-  // const handleDragLeave = () => {
-  //   console.log("drag leave")
-  //   setDragOverIndex(null);
-  // };
-
-  // const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-  //   console.log("drag drop")
-  //   e.preventDefault();
-
-  //   if (!draggedSpeaker) return;
-
-  //   const dragIndex = localSpeakers.findIndex(s => s.id === draggedSpeaker.id);
-  //   if (dragIndex === dropIndex) return;
-
-  //   const newSpeakers = [...localSpeakers];
-  //   const [removed] = newSpeakers.splice(dragIndex, 1);
-  //   newSpeakers.splice(dropIndex, 0, removed);
-
-  //   setLocalSpeakers(newSpeakers);
-  //   setDraggedSpeaker(null);
-  //   setDragOverIndex(null);
-  // };
-
-  // const handleDragEnd = () => {
-  //   console.log("drag end")
-  //   setDraggedSpeaker(null);
-  //   setDragOverIndex(null);
-  // };
-
-  // Start dragging
   const handleDragStart = (e: React.DragEvent, speaker: Speaker) => {
     setDraggedSpeaker(speaker);
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  // Over another item
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
   };
 
-  // Leaving item
   const handleDragLeave = () => {
     setDragOverIndex(null);
   };
 
-  // Dropping
   const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
 
@@ -248,39 +188,30 @@ const SpeakersSection: React.FC = () => {
     const dragIndex = speakers.findIndex(s => s.id === draggedSpeaker.id);
     if (dragIndex === dropIndex) return;
 
-    // Reorder locally
     const newSpeakers = [...speakers];
     const [movedItem] = newSpeakers.splice(dragIndex, 1);
     newSpeakers.splice(dropIndex, 0, movedItem);
 
-    // Update positions in the array (so they stay sequential)
     const updatedSpeakers = newSpeakers.map((speaker, index) => ({
       ...speaker,
-      position: index + 1, // or start from 0 if you prefer
+      position: index + 1,
     }));
 
     setSpeakers(updatedSpeakers as any);
     setDraggedSpeaker(null);
     setDragOverIndex(null);
 
-    // Persist to backend
     try {
-      // Make API calls for each updated item
-      // await Promise.all(
       updatedSpeakers.map(async (speaker) => {
         const res = await client.models.Speaker.update(speaker as any)
         console.log("position", res)
       })
-      // )
 
-      console.log('Positions updated successfully.');
     } catch (error) {
       console.error('Failed to update positions:', error);
-      // Optionally, revert local state or show an error
     }
   };
 
-  // Drag end
   const handleDragEnd = () => {
     setDraggedSpeaker(null);
     setDragOverIndex(null);

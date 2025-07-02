@@ -21,37 +21,23 @@ const WhyAttendSection: React.FC = () => {
   const [showPinModal, setShowPinModal] = useState(false);
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
 
-  // Section heading state
   const initialHeading = 'Why Attend';
   const [sectionHeading, setSectionHeading] = useState(initialHeading);
   const [isHeadingEditable, setIsHeadingEditable] = useState(false);
 
-  // Why attend items state
   const [whyAttendItems, setWhyAttendItems] = useState<WhyAttendItem[]>(initialWhyAttendItems);
 
       useEffect(() => {
-        // createWhyAttend();
-  
         client.models.WhyAttend.observeQuery().subscribe({
           next: (data: any) =>{ 
             setWhyAttendItems(data.items);
-            console.log('Why Attend data:', data.items);
         }});
       }, [whyAttendItems]);
-    // async function createWhyAttend(data?: any) {
-    //     const res = await client.models.WhyAttend.create({
-    //       icon: '🎓',
-    //       title: 'Learn',
-    //       description: 'Gain cutting-edge insights from industry leaders and expand your professional knowledge.',
-    //     });
-    //     console.log('Created Why Attend item:', res);
-    //   }
 
       function updateWhyAttend(data: any) {
         client.models.WhyAttend.update(data);
       }
   
-  // Edit form state for individual cards
   const [editForm, setEditForm] = useState<any>({
     icon: '',
     title: '',
@@ -102,20 +88,10 @@ const WhyAttendSection: React.FC = () => {
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    
-    // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // In a real app, you would save to your backend here
-    console.log('Saving why attend section changes:', {
-      sectionHeading,
-      whyAttendItems
-    });
     
     setIsSaving(false);
     setHasUnsavedChanges(false);
-    
-    // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Why Attend section saved successfully!';

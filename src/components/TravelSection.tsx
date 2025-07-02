@@ -113,29 +113,13 @@ const [travelOptions, setTravelOptions] = useState<any[]>([])
   const [showPinModal, setShowPinModal] = useState(false);
   const [editingOption, setEditingOption] = useState<string | null>(null);
 
-  // Section content state
   const initialMainHeading = 'Getting to Scottsdale';
   const initialSubHeading = 'Multiple convenient options to reach the conference venue';
 
   const [mainHeading, setMainHeading] = useState(initialMainHeading);
   const [subHeading, setSubHeading] = useState(initialSubHeading);
-
-  // Travel options content state
-
-  // Track if changes have been made
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
-  // Check for changes whenever content changes
-  // useEffect(() => {
-  //   const headingChanged = mainHeading !== initialMainHeading;
-  //   const subHeadingChanged = subHeading !== initialSubHeading;
-  //   const airTravelChanged = JSON.stringify(airTravelContent) !== JSON.stringify(initialAirTravelContent);
-  //   const groundTransportChanged = JSON.stringify(groundTransportContent) !== JSON.stringify(initialGroundTransportContent);
-    
-  //   setHasUnsavedChanges(headingChanged || subHeadingChanged || airTravelChanged || groundTransportChanged);
-  // }, [mainHeading, subHeading, airTravelContent, groundTransportContent]);
-
   const handlePinSuccess = () => {
     setShowPinModal(false);
     setIsEditMode(true);
@@ -176,22 +160,9 @@ const [travelOptions, setTravelOptions] = useState<any[]>([])
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    
-    // Simulate saving to backend
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // In a real app, you would save to your backend here
-    console.log('Saving travel section changes:', {
-      mainHeading,
-      subHeading,
-      airTravelContent,
-      groundTransportContent
-    });
-    
     setIsSaving(false);
     setHasUnsavedChanges(false);
-    
-    // Show success feedback
     const successMessage = document.createElement('div');
     successMessage.className = 'fixed top-4 right-4 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50';
     successMessage.textContent = 'Travel section saved successfully!';
